@@ -7,7 +7,7 @@ import {
 } from 'sequelize';
 import { getSequelize } from '../sequelize';
 import { TableName } from './constant';
-import { Permission } from './permissions.model';
+import { Permission } from './permission.model';
 import { Role } from './role.model';
 
 export class RolePermission extends Model<
@@ -22,7 +22,6 @@ RolePermission.init(
     {
         roleId: {
             type: DataTypes.INTEGER,
-            allowNull: false,
             field: 'role_id',
             references: {
                 model: Role,
@@ -31,7 +30,6 @@ RolePermission.init(
         },
         permissionId: {
             type: DataTypes.INTEGER,
-            allowNull: false,
             field: 'permission_id',
             references: {
                 model: Permission,

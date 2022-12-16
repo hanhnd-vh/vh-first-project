@@ -1,4 +1,6 @@
-import { Permission } from '../../../database/models/permissions.model';
+import { uniq } from 'lodash';
+import { Permission } from '../../../database/models/permission.model';
+import { RolePermission } from '../../../database/models/role-permission.model';
 import { Role } from '../../../database/models/role.model';
 import { HttpStatus } from '../../common/constants';
 import {
@@ -9,9 +11,9 @@ import {
 } from '../../constants';
 import { ErrorWithCode } from '../../exception/error.exception';
 import {
+    IChangeRolePermissionsBody,
     ICreateRoleBody,
     IGetRoleListQuery,
-    IChangeRolePermissionsBody,
     IUpdateRoleBody,
 } from './role.interface';
 
@@ -19,6 +21,7 @@ const roleIncludes = [
     {
         model: Permission,
         as: 'permissions',
+        through: { attributes: [] },
     },
 ];
 
@@ -53,7 +56,6 @@ export const getRoleList = async (query: IGetRoleListQuery) => {
         offset,
         limit,
         order: [[`${orderBy}`, `${orderDirection}`]],
-        include: roleIncludes,
     });
     return { items: rows, totalItems: count };
 };
@@ -64,11 +66,22 @@ export const updateRole = async (roleId: number, body: IUpdateRoleBody) => {
     return updatedRole;
 };
 
-export const updatePermissions = async (
+export const changeRolePermissions = async (
     roleId: number,
     body: IChangeRolePermissionsBody
 ) => {
     const role = await getRoleById(roleId);
+    const isPermissionIdsExisted = await checkExistedPermissionIds(
+        body.permissionIds
+    );
+    if (!isPermissionIdsExisted)
+        throw new ErrorWithCode(
+            HttpStatus.ITEM_NOT_FOUND,
+            'some permission not existed'
+        );
+    await role.setPermissions(body.permissionIds);
+    const updatedRole = await getRoleById(roleId);
+    return updatedRole;
 };
 
 export const deleteRole = async (roleId: number) => {
@@ -85,4 +98,14 @@ export const checkExistedRoleName = async (name: string) => {
     });
     if (role) return true;
     return false;
+};
+
+export const checkExistedPermissionIds = async (permissionIds: number[]) => {
+    const uniqPermissionIds = uniq(permissionIds);
+    const existedPermissionList = await Permission.findAll({
+        where: {
+            id: uniqPermissionIds,
+        },
+    });
+    return existedPermissionList.length === uniqPermissionIds.length;
 };

@@ -20,7 +20,6 @@ UserRole.init(
     {
         userId: {
             type: DataTypes.INTEGER,
-            allowNull: false,
             field: 'user_id',
             references: {
                 model: User,
@@ -29,7 +28,6 @@ UserRole.init(
         },
         roleId: {
             type: DataTypes.INTEGER,
-            allowNull: false,
             field: 'role_id',
             references: {
                 model: Role,
@@ -44,5 +42,6 @@ UserRole.init(
         createdAt: 'created_at',
         updatedAt: 'updated_at',
         deletedAt: 'deleted_at',
+        underscored: true,
     }
 );

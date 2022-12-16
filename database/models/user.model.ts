@@ -16,7 +16,7 @@ export class User extends Model<
     declare username: string;
     declare password: string;
     declare email: string;
-    declare setRoles: (roleIds: number[]) => Promise<User>;
+    declare setRoles: (roleIds: number[]) => Promise<void>;
 }
 
 User.init(
@@ -48,5 +48,6 @@ User.init(
         createdAt: 'created_at',
         updatedAt: 'updated_at',
         deletedAt: 'deleted_at',
+        underscored: true,
     }
 );

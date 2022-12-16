@@ -4,28 +4,28 @@ import { ErrorResponse } from '../../common/helper/responses';
 import { ErrorWithCode } from '../../exception/error.exception';
 import { SuccessResponse } from './../../common/helper/responses';
 import {
-    IChangeRolePermissionsBody,
-    ICreateRoleBody,
-    IGetRoleListQuery,
-    IUpdateRoleBody,
-} from './role.interface';
+    ICreatePermissionBody,
+    IGetPermissionListQuery,
+    IUpdatePermissionBody,
+} from './permission.interface';
 import {
-    changeRolePermissions,
-    createRole,
-    deleteRole,
-    getRoleById,
-    getRoleList,
-    updateRole,
-} from './role.service';
+    createPermission,
+    deletePermission,
+    getPermissionById,
+    getPermissionList,
+    updatePermission,
+} from './permission.service';
 
-export const createRoleController = async (
-    request: Request<{}, {}, ICreateRoleBody, {}>,
+export const createPermissionController = async (
+    request: Request<{}, {}, ICreatePermissionBody, {}>,
     response: Response
 ) => {
     const { body } = request;
     try {
-        const role = await createRole(body);
-        return response.status(HttpStatus.OK).send(new SuccessResponse(role));
+        const permission = await createPermission(body);
+        return response
+            .status(HttpStatus.OK)
+            .send(new SuccessResponse(permission));
     } catch (error) {
         const errorWithCode = error as ErrorWithCode;
         return response
@@ -39,16 +39,16 @@ export const createRoleController = async (
     }
 };
 
-export const getRoleListController = async (
-    request: Request<{}, {}, {}, IGetRoleListQuery>,
+export const getPermissionListController = async (
+    request: Request<{}, {}, {}, IGetPermissionListQuery>,
     response: Response
 ) => {
     const { query } = request;
     try {
-        const roleList = await getRoleList(query);
+        const permissionList = await getPermissionList(query);
         return response
             .status(HttpStatus.OK)
-            .send(new SuccessResponse(roleList));
+            .send(new SuccessResponse(permissionList));
     } catch (error) {
         const errorWithCode = error as ErrorWithCode;
         return response
@@ -62,15 +62,17 @@ export const getRoleListController = async (
     }
 };
 
-export const getRoleDetailController = async (
+export const getPermissionDetailController = async (
     request: Request<{ id: number }, {}, {}, {}>,
     response: Response
 ) => {
     const { id } = request.params;
 
     try {
-        const role = await getRoleById(id);
-        return response.status(HttpStatus.OK).send(new SuccessResponse(role));
+        const permission = await getPermissionById(id);
+        return response
+            .status(HttpStatus.OK)
+            .send(new SuccessResponse(permission));
     } catch (error) {
         const errorWithCode = error as ErrorWithCode;
         return response
@@ -84,16 +86,18 @@ export const getRoleDetailController = async (
     }
 };
 
-export const updateRoleController = async (
-    request: Request<{ id: number }, {}, IUpdateRoleBody, {}>,
+export const updatePermissionController = async (
+    request: Request<{ id: number }, {}, IUpdatePermissionBody, {}>,
     response: Response
 ) => {
     const { body, params } = request;
     const { id } = params;
 
     try {
-        const role = await updateRole(id, body);
-        return response.status(HttpStatus.OK).send(new SuccessResponse(role));
+        const permission = await updatePermission(id, body);
+        return response
+            .status(HttpStatus.OK)
+            .send(new SuccessResponse(permission));
     } catch (error) {
         const errorWithCode = error as ErrorWithCode;
         return response
@@ -107,38 +111,14 @@ export const updateRoleController = async (
     }
 };
 
-export const changeRolePermissionsController = async (
-    request: Request<{ id: number }, {}, IChangeRolePermissionsBody, {}>,
-    response: Response
-) => {
-    const { body, params } = request;
-    const { id } = params;
-
-    try {
-        const role = await changeRolePermissions(id, body);
-        return response.status(HttpStatus.OK).send(new SuccessResponse(role));
-    } catch (error) {
-        console.log('got ', error);
-        const errorWithCode = error as ErrorWithCode;
-        return response
-            .status(errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR)
-            .send(
-                new ErrorResponse(
-                    errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
-                    errorWithCode.message
-                )
-            );
-    }
-};
-
-export const deleteRoleController = async (
+export const deletePermissionController = async (
     request: Request<{ id: number }, {}, {}, {}>,
     response: Response
 ) => {
     const { id } = request.params;
 
     try {
-        const result = await deleteRole(id);
+        const result = await deletePermission(id);
         return response.status(HttpStatus.OK).send(new SuccessResponse(result));
     } catch (error) {
         const errorWithCode = error as ErrorWithCode;

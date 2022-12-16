@@ -22,6 +22,7 @@ const userIncludes = [
     {
         model: Role,
         as: 'roles',
+        through: { attributes: [] },
     },
 ];
 
@@ -70,7 +71,6 @@ export const getUserList = async (query: IGetUserListQuery) => {
         attributes: {
             exclude: userExcludeAttributes,
         },
-        include: userIncludes,
     });
     return { items: rows, totalItems: count };
 };
@@ -98,7 +98,8 @@ export const updateUserRoles = async (
     body: IChangeUserRolesBody
 ) => {
     const user = await getUserById(userId);
-    const updatedUser = await user.setRoles(body.roleIds);
+    await user.setRoles(body.roleIds);
+    const updatedUser = await getUserById(userId);
     return updatedUser;
 };
 
@@ -120,11 +121,10 @@ export const checkExistedUsername = async (username: string) => {
 
 export const checkExistedRoleIds = async (roleIds: number[]) => {
     const uniqRoleIds = uniq(roleIds);
-    const existedRole = await Role.findAll({
+    const existedRoleList = await Role.findAll({
         where: {
             id: uniqRoleIds,
         },
     });
-    if (existedRole.length < uniqRoleIds.length) return false;
-    return true;
+    return existedRoleList.length === uniqRoleIds.length;
 };
