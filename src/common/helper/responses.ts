@@ -10,6 +10,9 @@ export interface IErrorResponse {
     message?: string;
 }
 
+export interface IError {
+    code: number;
+}
 export class SuccessResponse {
     constructor(data = {}) {
         return {
@@ -31,14 +34,5 @@ export class ErrorResponse {
             message,
             errors,
         };
-    }
-}
-
-export class InternalErrorResponse {
-    constructor() {
-        return new ErrorResponse(
-            HttpStatus.INTERNAL_SERVER_ERROR,
-            'An error occurred. Try again.'
-        );
     }
 }

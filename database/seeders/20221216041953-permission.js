@@ -1,23 +1,30 @@
 'use strict';
 
 /** @type {import('sequelize-cli').Migration} */
-const actionIds = [1, 2, 3, 4];
-const resourceIds = [1];
+const permissions = [
+    'CREATE_USER',
+    'READ_USER',
+    'UPDATE_USER',
+    'DELETE_USER',
+    'CREATE_ROLE',
+    'READ_ROLE',
+    'UPDATE_ROLE',
+    'DELETE_ROLE',
+];
 
-const permissions = [];
-actionIds.forEach((actionId) => {
-    resourceIds.forEach((resourceId) => {
-        permissions.push({
-            action_id: actionId,
-            resource_id: resourceId,
-            created_at: new Date(),
-            updated_at: new Date(),
-        });
-    });
-});
 module.exports = {
     async up(queryInterface, Sequelize) {
-        return queryInterface.bulkInsert('permissions', permissions);
+        return queryInterface.bulkInsert(
+            'permissions',
+            permissions.map((permission, index) => {
+                return {
+                    id: index + 1,
+                    name: permission,
+                    created_at: new Date(),
+                    updated_at: new Date(),
+                };
+            })
+        );
     },
 
     async down(queryInterface, Sequelize) {

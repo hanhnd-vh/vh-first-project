@@ -3,20 +3,20 @@ export enum Role {
     USER = 'USER',
 }
 
-export enum PermissionAction {
-    CREATE = 'CREATE',
-    READ = 'READ',
-    UPDATE = 'UPDATE',
-    DELETE = 'DELETE',
-}
-
-export enum PermissionResource {
-    USER = 'USER',
+export enum Permissions {
+    CREATE_USER = 'CREATE_USER',
+    READ_USER = 'READ_USER',
+    UPDATE_USER = 'UPDATE_USER',
+    DELETE_USER = 'DELETE_USER',
+    CREATE_ROLE = 'CREATE_ROLE',
+    READ_ROLE = 'READ_ROLE',
+    UPDATE_ROLE = 'UPDATE_ROLE',
+    DELETE_ROLE = 'DELETE_ROLE',
 }
 
 export enum OrderDirection {
-    ASC = 'asc',
-    DESC = 'desc',
+    ASC = 'ASC',
+    DESC = 'DESC',
 }
 
 export enum OrderBy {

@@ -1,16 +1,17 @@
 import express from 'express';
-import { Action } from './database/models/action.model';
 import { Permission } from './database/models/permissions.model';
-import { Resource } from './database/models/resource.model';
 import { RolePermission } from './database/models/role-permission.model';
 import { Role } from './database/models/role.model';
+import { UserRole } from './database/models/user-roles.model';
 import { User } from './database/models/user.model';
 import { getSequelize } from './database/sequelize';
+import roleRouter from './src/components/roles';
 import userRouter from './src/components/users/';
 
 const app = express();
 app.use(express.json());
-app.use('/users', userRouter);
+app.use('/api/v1/users', userRouter);
+app.use('/api/v1/roles', roleRouter);
 
 const PORT = process.env.PORT || 3000;
 
@@ -25,34 +26,28 @@ const bootstrap = async () => {
     try {
         await getSequelize().authenticate();
         console.log('connected to mysql');
-        // Permission - Action: 1 - 1
-        Action.hasOne(Permission, {
-            foreignKey: 'action_id',
-        });
-        Permission.belongsTo(Action);
-
-        // Permission - Resource: 1 - 1
-        Resource.hasOne(Permission, {
-            foreignKey: 'resource_id',
-        });
-        Permission.belongsTo(Resource);
-
         // Role - Permission: n - n
         Role.belongsToMany(Permission, {
             through: RolePermission,
             foreignKey: 'role_id',
+            as: 'permissions',
         });
         Permission.belongsToMany(Role, {
             through: RolePermission,
             foreignKey: 'permission_id',
+            as: 'roles',
         });
 
         // User - Role: n - 1
-        User.belongsTo(Role, {
-            foreignKey: 'role_id',
+        User.belongsToMany(Role, {
+            through: UserRole,
+            foreignKey: 'user_id',
+            as: 'roles',
         });
-        Role.hasMany(User, {
+        Role.belongsToMany(User, {
+            through: UserRole,
             foreignKey: 'role_id',
+            as: 'users',
         });
         getSequelize().sync({ force: false });
     } catch (error) {

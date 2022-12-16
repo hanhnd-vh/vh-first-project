@@ -1,13 +1,13 @@
 import { Response } from 'express';
 import { HttpStatus } from '../../common/constants';
+import { ErrorResponse, SuccessResponse } from '../../common/helper/responses';
+import { ErrorWithCode } from '../../exception/error.exception';
+import { IRequestWithUser } from '../../interfaces';
 import {
-    InternalErrorResponse,
-    SuccessResponse,
-} from '../../common/helper/responses';
-import {
+    IChangeUserPasswordBody,
+    IChangeUserRolesBody,
     ICreateUserBody,
     IGetUserListQuery,
-    IRequestWithUser,
     IUpdateUserBody,
 } from './user.interface';
 import {
@@ -15,7 +15,9 @@ import {
     deleteUser,
     getUserById,
     getUserList,
+    updateUserPassword,
     updateUserProfile,
+    updateUserRoles,
 } from './user.service';
 
 export const getUserListController = async (
@@ -29,9 +31,15 @@ export const getUserListController = async (
             .status(HttpStatus.OK)
             .send(new SuccessResponse(userList));
     } catch (error) {
+        const errorWithCode = error as ErrorWithCode;
         return response
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .send(new InternalErrorResponse());
+            .status(errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR)
+            .send(
+                new ErrorResponse(
+                    errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
+                    errorWithCode.message
+                )
+            );
     }
 };
 
@@ -44,9 +52,15 @@ export const createUserController = async (
         const user = await createUser(body);
         return response.status(HttpStatus.OK).send(new SuccessResponse(user));
     } catch (error) {
+        const errorWithCode = error as ErrorWithCode;
         return response
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .send(new InternalErrorResponse());
+            .status(errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR)
+            .send(
+                new ErrorResponse(
+                    errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
+                    errorWithCode.message
+                )
+            );
     }
 };
 
@@ -59,9 +73,15 @@ export const getUserDetailController = async (
         const user = await getUserById(id);
         return response.status(HttpStatus.OK).send(new SuccessResponse(user));
     } catch (error) {
+        const errorWithCode = error as ErrorWithCode;
         return response
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .send(new InternalErrorResponse());
+            .status(errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR)
+            .send(
+                new ErrorResponse(
+                    errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
+                    errorWithCode.message
+                )
+            );
     }
 };
 
@@ -76,9 +96,61 @@ export const updateUserProfileController = async (
         const user = await updateUserProfile(request.userId || id, body); // temporary util request.userId works
         return response.status(HttpStatus.OK).send(new SuccessResponse(user));
     } catch (error) {
+        const errorWithCode = error as ErrorWithCode;
         return response
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .send(new InternalErrorResponse());
+            .status(errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR)
+            .send(
+                new ErrorResponse(
+                    errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
+                    errorWithCode.message
+                )
+            );
+    }
+};
+
+export const updateUserPasswordController = async (
+    request: IRequestWithUser<{ id: number }, {}, IChangeUserPasswordBody, {}>,
+    response: Response
+) => {
+    const { body, params } = request;
+    const { id } = params;
+
+    try {
+        const user = await updateUserPassword(request.userId || id, body); // temporary util request.userId works
+        return response.status(HttpStatus.OK).send(new SuccessResponse(user));
+    } catch (error) {
+        const errorWithCode = error as ErrorWithCode;
+        return response
+            .status(errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR)
+            .send(
+                new ErrorResponse(
+                    errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
+                    errorWithCode.message
+                )
+            );
+    }
+};
+
+export const updateUserRolesController = async (
+    request: IRequestWithUser<{ id: number }, {}, IChangeUserRolesBody, {}>,
+    response: Response
+) => {
+    const { body, params } = request;
+    const { id } = params;
+
+    try {
+        const user = await updateUserRoles(request.userId || id, body); // temporary util request.userId works
+        return response.status(HttpStatus.OK).send(new SuccessResponse(user));
+    } catch (error) {
+        const errorWithCode = error as ErrorWithCode;
+        return response
+            .status(errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR)
+            .send(
+                new ErrorResponse(
+                    errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
+                    errorWithCode.message
+                )
+            );
     }
 };
 
@@ -91,8 +163,14 @@ export const deleteUserController = async (
         const result = await deleteUser(id);
         return response.status(HttpStatus.OK).send(new SuccessResponse(result));
     } catch (error) {
+        const errorWithCode = error as ErrorWithCode;
         return response
-            .status(HttpStatus.INTERNAL_SERVER_ERROR)
-            .send(new InternalErrorResponse());
+            .status(errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR)
+            .send(
+                new ErrorResponse(
+                    errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
+                    errorWithCode.message
+                )
+            );
     }
 };

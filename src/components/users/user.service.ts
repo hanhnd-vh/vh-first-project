@@ -1,15 +1,17 @@
+import { uniq } from 'lodash';
 import { Role } from '../../../database/models/role.model';
 import { User } from '../../../database/models/user.model';
+import { HttpStatus } from '../../common/constants';
+import { ErrorWithCode } from '../../exception/error.exception';
 import {
     DEFAULT_ORDER_BY,
     DEFAULT_ORDER_DIRECTION,
     DEFAULT_PAGE_LIMIT,
     DEFAULT_PAGE_VALUE,
 } from './../../constants';
-import { checkExistedRoleId } from './../roles/role.service';
 import {
     IChangeUserPasswordBody,
-    IChangeUserRoleBody,
+    IChangeUserRolesBody,
     ICreateUserBody,
     IGetUserListQuery,
     IUpdateUserBody,
@@ -19,16 +21,21 @@ const userExcludeAttributes = ['password', 'roleId'];
 const userIncludes = [
     {
         model: Role,
-        as: 'role',
+        as: 'roles',
     },
 ];
 
 export const createUser = async (body: ICreateUserBody) => {
     const isUsernameExisted = await checkExistedUsername(body.username);
-    if (isUsernameExisted) throw new Error('username existed!');
+    if (isUsernameExisted)
+        throw new ErrorWithCode(HttpStatus.ITEM_EXISTED, 'username existed!');
 
-    const isRoleExisted = await checkExistedRoleId(body.roleId);
-    if (!isRoleExisted) throw new Error('role not existed!');
+    const isRolesExisted = await checkExistedRoleIds(body.roleIds);
+    if (!isRolesExisted)
+        throw new ErrorWithCode(
+            HttpStatus.ITEM_NOT_FOUND,
+            'some roles are not existed!'
+        );
 
     const createdUser = await User.create(body);
     const user = await getUserById(createdUser.id);
@@ -42,7 +49,8 @@ export const getUserById = async (userId: number) => {
         },
         include: userIncludes,
     });
-    if (!user) throw new Error('user not found!');
+    if (!user)
+        throw new ErrorWithCode(HttpStatus.ITEM_NOT_FOUND, 'user not found!');
     return user;
 };
 
@@ -58,7 +66,7 @@ export const getUserList = async (query: IGetUserListQuery) => {
     const { rows, count } = await User.findAndCountAll({
         offset,
         limit,
-        order: [`${orderBy}`, `${orderDirection}`],
+        order: [[`${orderBy}`, `${orderDirection}`]],
         attributes: {
             exclude: userExcludeAttributes,
         },
@@ -72,8 +80,7 @@ export const updateUserProfile = async (
     body: IUpdateUserBody
 ) => {
     const user = await getUserById(userId);
-    await user.update(body);
-    const updatedUser = await getUserById(user.id);
+    const updatedUser = await user.update(body);
     return updatedUser;
 };
 
@@ -82,18 +89,16 @@ export const updateUserPassword = async (
     body: IChangeUserPasswordBody
 ) => {
     const user = await getUserById(userId);
-    await user.update(body);
-    const updatedUser = await getUserById(user.id);
+    const updatedUser = await user.update(body);
     return updatedUser;
 };
 
-export const updateUserRole = async (
+export const updateUserRoles = async (
     userId: number,
-    body: IChangeUserRoleBody
+    body: IChangeUserRolesBody
 ) => {
     const user = await getUserById(userId);
-    await user.update(body);
-    const updatedUser = await getUserById(user.id);
+    const updatedUser = await user.setRoles(body.roleIds);
     return updatedUser;
 };
 
@@ -111,4 +116,15 @@ export const checkExistedUsername = async (username: string) => {
     });
     if (existedUser) return true;
     return false;
+};
+
+export const checkExistedRoleIds = async (roleIds: number[]) => {
+    const uniqRoleIds = uniq(roleIds);
+    const existedRole = await Role.findAll({
+        where: {
+            id: uniqRoleIds,
+        },
+    });
+    if (existedRole.length < uniqRoleIds.length) return false;
+    return true;
 };

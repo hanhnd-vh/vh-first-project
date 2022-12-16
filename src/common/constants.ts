@@ -5,6 +5,7 @@ export enum HttpStatus {
     FORBIDDEN = 403,
     NOT_FOUND = 404,
     ITEM_NOT_FOUND = 444,
+    ITEM_EXISTED = 445,
     INTERNAL_SERVER_ERROR = 500,
     SERVICE_UNAVAILABLE = 503,
 }

@@ -13,8 +13,7 @@ export class Permission extends Model<
     InferCreationAttributes<Permission>
 > {
     declare id: CreationOptional<number>;
-    declare actionId: number;
-    declare resourceId: number;
+    declare name: string;
 }
 
 Permission.init(
@@ -24,15 +23,9 @@ Permission.init(
             primaryKey: true,
             autoIncrement: true,
         },
-        actionId: {
-            type: DataTypes.INTEGER,
+        name: {
+            type: DataTypes.STRING,
             allowNull: false,
-            field: 'action_id',
-        },
-        resourceId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            field: 'resource_id',
         },
     },
     {

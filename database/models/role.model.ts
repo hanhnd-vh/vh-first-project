@@ -14,6 +14,7 @@ export class Role extends Model<
 > {
     declare id: CreationOptional<number>;
     declare name: string;
+    declare setPermissions: (permissionIds: number[]) => Promise<void>;
 }
 
 Role.init(
@@ -34,5 +35,6 @@ Role.init(
         paranoid: true,
         createdAt: 'created_at',
         updatedAt: 'updated_at',
+        deletedAt: 'deleted_at',
     }
 );

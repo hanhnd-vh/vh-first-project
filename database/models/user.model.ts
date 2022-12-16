@@ -16,7 +16,7 @@ export class User extends Model<
     declare username: string;
     declare password: string;
     declare email: string;
-    declare roleId: number;
+    declare setRoles: (roleIds: number[]) => Promise<User>;
 }
 
 User.init(
@@ -39,11 +39,6 @@ User.init(
             type: DataTypes.STRING,
             unique: true,
             allowNull: false,
-        },
-        roleId: {
-            type: DataTypes.INTEGER,
-            allowNull: false,
-            field: 'role_id',
         },
     },
     {
