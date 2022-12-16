@@ -1,0 +1,13 @@
+export enum HttpStatus {
+    OK = 200,
+    BAD_REQUEST = 400,
+    UNAUTHORIZED = 401,
+    FORBIDDEN = 403,
+    NOT_FOUND = 404,
+    ITEM_NOT_FOUND = 444,
+    INTERNAL_SERVER_ERROR = 500,
+    SERVICE_UNAVAILABLE = 503,
+}
+
+export const DEFAULT_SUCCESS_MESSAGE_RESPONSE = 'success';
+export const DEFAULT_ERROR_MESSAGE_RESPONSE = 'error';
