@@ -9,15 +9,16 @@ import authRouter from './src/components/auth';
 import permissionRouter from './src/components/permissions';
 import roleRouter from './src/components/roles';
 import userRouter from './src/components/users/';
+import { authenticate } from './src/middlewares/authenticate.middleware';
 
 const API_PREFIX = '/api/v1';
 
 const app = express();
 app.use(express.json());
 app.use(`${API_PREFIX}`, authRouter);
-app.use(`${API_PREFIX}/users`, userRouter);
-app.use(`${API_PREFIX}/roles`, roleRouter);
-app.use(`${API_PREFIX}/permissions`, permissionRouter);
+app.use(`${API_PREFIX}/users`, authenticate, userRouter);
+app.use(`${API_PREFIX}/roles`, authenticate, roleRouter);
+app.use(`${API_PREFIX}/permissions`, authenticate, permissionRouter);
 
 const PORT = process.env.PORT || 3000;
 

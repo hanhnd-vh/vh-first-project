@@ -1,4 +1,5 @@
 import { Permission } from '../../../database/models/permission.model';
+import { Role } from '../../../database/models/role.model';
 import { HttpStatus } from '../../common/constants';
 import {
     DEFAULT_ORDER_BY,
@@ -72,4 +73,20 @@ export const checkExistedPermissionName = async (name: string) => {
     });
     if (permission) return true;
     return false;
+};
+
+export const getPermissionsByRoleIds = async (roleIds: number[]) => {
+    const permissions = await Permission.findAll({
+        include: [
+            {
+                model: Role,
+                attributes: ['id'],
+                as: 'roles',
+                where: {
+                    id: roleIds,
+                },
+            },
+        ],
+    });
+    return permissions;
 };

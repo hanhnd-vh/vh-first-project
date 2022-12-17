@@ -1,33 +1,13 @@
-import jwt from 'jsonwebtoken';
 import { uniq } from 'lodash';
 import { Role } from '../../../database/models/role.model';
 import { User } from '../../../database/models/user.model';
 import { HttpStatus } from '../../common/constants';
 import { compare, hash } from '../../common/helper/bcrypt';
+import { signToken } from '../../common/helper/jwt';
 import { ErrorWithCode } from '../../exception/error.exception';
+import { getPermissionsByRoleIds } from './../permissions/permission.service';
 import { getUserById, userIncludes } from './../users/user.service';
-import { IJwtPayload, ILoginBody, IRegisterBody } from './auth.interface';
-
-const ACCESS_TOKEN_SECRET_KEY = process.env.ACCESS_TOKEN_SECRET_KEY || 'secret';
-const ACCESS_TOKEN_SECRET_EXPIRES_IN =
-    process.env.ACCESS_TOKEN_SECRET_EXPIRES_IN || '10m';
-
-export const signToken = async (
-    payload: IJwtPayload,
-    secretKey = ACCESS_TOKEN_SECRET_KEY,
-    expiresIn = ACCESS_TOKEN_SECRET_EXPIRES_IN
-) => {
-    return jwt.sign(payload, secretKey, {
-        expiresIn,
-    });
-};
-
-export const verifyToken = async (
-    token: string,
-    secretKey = ACCESS_TOKEN_SECRET_KEY
-) => {
-    return jwt.verify(token, secretKey);
-};
+import { ILoginBody, IRegisterBody } from './auth.interface';
 
 export const logIn = async (body: ILoginBody) => {
     const existedUser = await getUserByUsername(body.username);
@@ -44,13 +24,7 @@ export const logIn = async (body: ILoginBody) => {
             'invalid username or password!'
         );
 
-    const roleIds = (existedUser.roles || []).map((role) => role.id);
-    const token = await signToken({
-        userId: existedUser.id,
-        username: existedUser.username,
-        roleIds,
-    });
-
+    const token = await signUserToken(existedUser);
     return token;
 };
 
@@ -78,13 +52,7 @@ export const register = async (body: IRegisterBody) => {
             HttpStatus.INTERNAL_SERVER_ERROR,
             'an error occurred!'
         );
-
-    const roleIds = (user.roles || []).map((role) => role.id);
-    const token = await signToken({
-        userId: user.id,
-        username: user.username,
-        roleIds,
-    });
+    const token = await signUserToken(user);
     return token;
 };
 
@@ -98,7 +66,7 @@ const checkExistedRoleIds = async (roleIds: number[]) => {
     return existedRoleList.length === uniqRoleIds.length;
 };
 
-export const getUserByUsername = async (username: string) => {
+const getUserByUsername = async (username: string) => {
     const existedUser = await User.findOne({
         where: {
             username,
@@ -106,4 +74,19 @@ export const getUserByUsername = async (username: string) => {
         include: userIncludes,
     });
     return existedUser;
+};
+
+const signUserToken = async (user: User) => {
+    const roleIds = (user.roles || []).map((role) => role.id);
+    const roles = (user.roles || []).map((role) => role.name);
+    const permissions = ((await getPermissionsByRoleIds(roleIds)) || []).map(
+        (permission) => permission.name
+    );
+    const token = await signToken({
+        userId: user.id,
+        username: user.username,
+        roles,
+        permissions,
+    });
+    return token;
 };

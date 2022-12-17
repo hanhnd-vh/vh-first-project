@@ -8,10 +8,13 @@ export interface ICommonGetListQuery {
 }
 
 export interface IRequestWithUser<
-    P extends {},
-    ResB extends {},
-    ReqB extends {},
-    Q extends {}
+    P extends {} = {},
+    ResB extends {} = {},
+    ReqB extends {} = {},
+    Q extends {} = {}
 > extends Request<P, ResB, ReqB, Q> {
     userId?: number;
+    username?: string;
+    roles?: string[];
+    permissions?: string[];
 }

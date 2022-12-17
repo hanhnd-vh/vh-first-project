@@ -1,13 +1,18 @@
-export enum Role {
+export enum Roles {
     ADMIN = 'ADMIN',
     USER = 'USER',
 }
 
 export enum Permissions {
+    // User
     CREATE_USER = 'CREATE_USER',
     READ_USER = 'READ_USER',
-    UPDATE_USER = 'UPDATE_USER',
+    UPDATE_USER_PROFILE = 'UPDATE_USER_PROFILE',
+    CHANGE_PASSWORD = 'CHANGE_PASSWORD',
+    CHANGE_USER_ROLES = 'CHANGE_USER_ROLES',
     DELETE_USER = 'DELETE_USER',
+
+    // Role
     CREATE_ROLE = 'CREATE_ROLE',
     READ_ROLE = 'READ_ROLE',
     UPDATE_ROLE = 'UPDATE_ROLE',
