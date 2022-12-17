@@ -1,0 +1,1 @@
+export const PERMISSION_NAME_MAX_LENGTH = 200;

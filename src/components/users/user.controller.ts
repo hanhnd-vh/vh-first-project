@@ -93,7 +93,7 @@ export const updateUserPasswordController = async (
     const { id } = params;
 
     try {
-        const user = await updateUserPassword(request.userId || id, body); // temporary util request.userId works
+        const user = await updateUserPassword(request.userId || id, body);
         return response.status(HttpStatus.OK).send(new SuccessResponse(user));
     } catch (error) {
         const errorWithCode = error as ErrorWithCode;
@@ -116,7 +116,7 @@ export const updateUserRolesController = async (
     const { id } = params;
 
     try {
-        const user = await updateUserRoles(request.userId || id, body); // temporary util request.userId works
+        const user = await updateUserRoles(request.userId || id, body);
         return response.status(HttpStatus.OK).send(new SuccessResponse(user));
     } catch (error) {
         const errorWithCode = error as ErrorWithCode;

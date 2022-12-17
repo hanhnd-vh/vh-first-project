@@ -1,3 +1,5 @@
+import Joi from './plugins/joi';
+
 export enum Roles {
     ADMIN = 'ADMIN',
     USER = 'USER',
@@ -33,7 +35,21 @@ export const DEFAULT_PAGE_LIMIT = 10;
 export const DEFAULT_ORDER_BY = OrderBy.ID;
 export const DEFAULT_ORDER_DIRECTION = OrderDirection.DESC;
 
-module.exports = {
-    Roles,
-    Permissions,
+export const Regex = {
+    EMAIL: /^[\w-\.]+@([\w-]+\.)+[\w-]{1,255}$/,
+};
+
+export const MIN_PAGE_VALUE = 1;
+export const MIN_PAGE_LIMIT = 1;
+
+export const CommonGetListQuerySchema = {
+    page: Joi.number().min(MIN_PAGE_VALUE).optional().allow(null),
+    limit: Joi.number().min(MIN_PAGE_LIMIT).optional().allow(null),
+    keyword: Joi.string().optional().allow(null, ''),
+    orderDirection: Joi.string()
+        .valid(...Object.values(OrderDirection))
+        .optional(),
+    orderBy: Joi.string()
+        .valid(...Object.values(OrderBy))
+        .optional(),
 };
