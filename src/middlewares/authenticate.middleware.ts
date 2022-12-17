@@ -1,7 +1,7 @@
 import { NextFunction, Response } from 'express';
-import { verifyToken } from '../common/helper/jwt';
 import { ErrorResponse } from '../common/helper/responses';
 import { ErrorWithCode } from '../exception/error.exception';
+import { verifyToken } from '../plugins/jwt';
 import { HttpStatus } from './../common/constants';
 import { IRequestWithUser } from './../interfaces';
 

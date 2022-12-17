@@ -1,8 +1,8 @@
 import { Role } from '../../../database/models/role.model';
 import { User } from '../../../database/models/user.model';
 import { HttpStatus } from '../../common/constants';
-import { hash } from '../../common/helper/bcrypt';
 import { ErrorWithCode } from '../../exception/error.exception';
+import { hash } from '../../plugins/bcrypt';
 import {
     DEFAULT_ORDER_BY,
     DEFAULT_ORDER_DIRECTION,
