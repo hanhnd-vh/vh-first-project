@@ -5,7 +5,7 @@ import {
     InferCreationAttributes,
     Model,
 } from 'sequelize';
-import { getSequelize } from '../sequelize';
+import sequelize from '../sequelize';
 import { TableName } from './constant';
 
 export class Permission extends Model<
@@ -29,7 +29,7 @@ Permission.init(
         },
     },
     {
-        sequelize: getSequelize(),
+        sequelize: sequelize,
         tableName: TableName.PERMISSION,
         paranoid: true,
         createdAt: 'created_at',

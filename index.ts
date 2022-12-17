@@ -4,7 +4,7 @@ import { RolePermission } from './database/models/role-permission.model';
 import { Role } from './database/models/role.model';
 import { UserRole } from './database/models/user-roles.model';
 import { User } from './database/models/user.model';
-import { getSequelize } from './database/sequelize';
+import sequelize from './database/sequelize';
 import authRouter from './src/components/auth';
 import permissionRouter from './src/components/permissions';
 import roleRouter from './src/components/roles';
@@ -30,7 +30,7 @@ const bootstrap = async () => {
         console.log(`server is running at http:localhost:${PORT}`);
     });
     try {
-        await getSequelize().authenticate();
+        await sequelize.authenticate();
         console.log('connected to mysql');
         // Role - Permission: n - n
         Role.belongsToMany(Permission, {
@@ -55,7 +55,7 @@ const bootstrap = async () => {
             as: 'users',
         });
 
-        getSequelize().sync({ force: false });
+        sequelize.sync({ force: false });
     } catch (error) {
         console.log('connect to mysql failed', error);
     }

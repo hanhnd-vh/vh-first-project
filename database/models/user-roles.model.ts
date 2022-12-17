@@ -4,7 +4,7 @@ import {
     InferCreationAttributes,
     Model,
 } from 'sequelize';
-import { getSequelize } from '../sequelize';
+import sequelize from '../sequelize';
 import { TableName } from './constant';
 import { Role } from './role.model';
 import { User } from './user.model';
@@ -36,7 +36,7 @@ UserRole.init(
         },
     },
     {
-        sequelize: getSequelize(),
+        sequelize: sequelize,
         tableName: TableName.USER_ROLE,
         paranoid: true,
         createdAt: 'created_at',

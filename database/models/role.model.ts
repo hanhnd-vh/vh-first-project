@@ -5,7 +5,7 @@ import {
     InferCreationAttributes,
     Model,
 } from 'sequelize';
-import { getSequelize } from '../sequelize';
+import sequelize from '../sequelize';
 import { TableName } from './constant';
 
 export class Role extends Model<
@@ -30,7 +30,7 @@ Role.init(
         },
     },
     {
-        sequelize: getSequelize(),
+        sequelize: sequelize,
         tableName: TableName.ROLE,
         paranoid: true,
         createdAt: 'created_at',

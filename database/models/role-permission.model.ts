@@ -1,11 +1,10 @@
 import {
-    CreationOptional,
     DataTypes,
     InferAttributes,
     InferCreationAttributes,
     Model,
 } from 'sequelize';
-import { getSequelize } from '../sequelize';
+import sequelize from '../sequelize';
 import { TableName } from './constant';
 import { Permission } from './permission.model';
 import { Role } from './role.model';
@@ -38,7 +37,7 @@ RolePermission.init(
         },
     },
     {
-        sequelize: getSequelize(),
+        sequelize: sequelize,
         tableName: TableName.ROLE_PERMISSION,
         paranoid: true,
         createdAt: 'created_at',
