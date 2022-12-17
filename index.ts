@@ -55,8 +55,6 @@ const bootstrap = async () => {
             foreignKey: 'role_id',
             as: 'users',
         });
-
-        sequelize.sync({ force: false });
     } catch (error) {
         console.log('connect to mysql failed', error);
     }

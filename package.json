@@ -7,7 +7,12 @@
     "build": "npx tsc",
     "start": "node dist/index.js",
     "dev": "concurrently \"npx tsc --watch\" \"nodemon -q dist/index.js\"",
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "drop:run": "sequelize db:drop && sequelize db:create",
+    "migration:run": "sequelize db:migrate --config './config/config.json'",
+    "drop:migration": "yarn drop:run && yarn migrate:run",
+    "seed:run": "sequelize db:seed:all --config './config/config.json'",
+    "drop:migration:seed": "yarn drop:run && yarn migration:run && yarn seed:run"
   },
   "author": "",
   "license": "ISC",
