@@ -1,16 +1,4 @@
 import { ICommonGetListQuery } from '../../interfaces';
-import { IRole } from '../roles/role.interface';
-
-export interface IUser {
-    id: number;
-    username: string;
-    password: string;
-    email: string;
-    role: IRole[];
-    createdAt: Date;
-    updatedAt: Date;
-    deletedAt?: Date;
-}
 
 export interface IGetUserListQuery extends ICommonGetListQuery {}
 

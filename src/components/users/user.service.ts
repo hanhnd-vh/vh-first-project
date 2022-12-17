@@ -1,7 +1,7 @@
-import { uniq } from 'lodash';
 import { Role } from '../../../database/models/role.model';
 import { User } from '../../../database/models/user.model';
 import { HttpStatus } from '../../common/constants';
+import { hash } from '../../common/helper/bcrypt';
 import { ErrorWithCode } from '../../exception/error.exception';
 import {
     DEFAULT_ORDER_BY,
@@ -12,36 +12,18 @@ import {
 import {
     IChangeUserPasswordBody,
     IChangeUserRolesBody,
-    ICreateUserBody,
     IGetUserListQuery,
     IUpdateUserBody,
 } from './user.interface';
 
-const userExcludeAttributes = ['password', 'roleId'];
-const userIncludes = [
+export const userExcludeAttributes = ['password'];
+export const userIncludes = [
     {
         model: Role,
         as: 'roles',
         through: { attributes: [] },
     },
 ];
-
-export const createUser = async (body: ICreateUserBody) => {
-    const isUsernameExisted = await checkExistedUsername(body.username);
-    if (isUsernameExisted)
-        throw new ErrorWithCode(HttpStatus.ITEM_EXISTED, 'username existed!');
-
-    const isRolesExisted = await checkExistedRoleIds(body.roleIds);
-    if (!isRolesExisted)
-        throw new ErrorWithCode(
-            HttpStatus.ITEM_NOT_FOUND,
-            'some roles are not existed!'
-        );
-
-    const createdUser = await User.create(body);
-    const user = await getUserById(createdUser.id);
-    return user;
-};
 
 export const getUserById = async (userId: number) => {
     const user = await User.findByPk(userId, {
@@ -53,6 +35,17 @@ export const getUserById = async (userId: number) => {
     if (!user)
         throw new ErrorWithCode(HttpStatus.ITEM_NOT_FOUND, 'user not found!');
     return user;
+};
+
+export const getUserByUsername = async (username: string) => {
+    const existedUser = await User.findOne({
+        where: {
+            username,
+        },
+    });
+    if (!existedUser)
+        throw new ErrorWithCode(HttpStatus.ITEM_NOT_FOUND, 'user not found!');
+    return existedUser;
 };
 
 export const getUserList = async (query: IGetUserListQuery) => {
@@ -89,7 +82,10 @@ export const updateUserPassword = async (
     body: IChangeUserPasswordBody
 ) => {
     const user = await getUserById(userId);
-    const updatedUser = await user.update(body);
+    const hashedPassword = await hash(body.password);
+    const updatedUser = await user.update({
+        password: hashedPassword,
+    });
     return updatedUser;
 };
 
@@ -107,24 +103,4 @@ export const deleteUser = async (userId: number) => {
     const user = await getUserById(userId);
     await user.destroy();
     return 'OK';
-};
-
-export const checkExistedUsername = async (username: string) => {
-    const existedUser = await User.findOne({
-        where: {
-            username,
-        },
-    });
-    if (existedUser) return true;
-    return false;
-};
-
-export const checkExistedRoleIds = async (roleIds: number[]) => {
-    const uniqRoleIds = uniq(roleIds);
-    const existedRoleList = await Role.findAll({
-        where: {
-            id: uniqRoleIds,
-        },
-    });
-    return existedRoleList.length === uniqRoleIds.length;
 };

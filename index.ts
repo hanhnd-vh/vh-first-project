@@ -5,6 +5,7 @@ import { Role } from './database/models/role.model';
 import { UserRole } from './database/models/user-roles.model';
 import { User } from './database/models/user.model';
 import { getSequelize } from './database/sequelize';
+import authRouter from './src/components/auth';
 import permissionRouter from './src/components/permissions';
 import roleRouter from './src/components/roles';
 import userRouter from './src/components/users/';
@@ -13,6 +14,7 @@ const API_PREFIX = '/api/v1';
 
 const app = express();
 app.use(express.json());
+app.use(`${API_PREFIX}`, authRouter);
 app.use(`${API_PREFIX}/users`, userRouter);
 app.use(`${API_PREFIX}/roles`, roleRouter);
 app.use(`${API_PREFIX}/permissions`, permissionRouter);

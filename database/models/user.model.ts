@@ -7,6 +7,7 @@ import {
 } from 'sequelize';
 import { getSequelize } from '../sequelize';
 import { TableName } from './constant';
+import { Role } from './role.model';
 
 export class User extends Model<
     InferAttributes<User>,
@@ -17,6 +18,7 @@ export class User extends Model<
     declare password: string;
     declare email: string;
     declare setRoles: (roleIds: number[]) => Promise<void>;
+    declare roles?: Role[];
 }
 
 User.init(

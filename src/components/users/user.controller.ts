@@ -6,12 +6,10 @@ import { IRequestWithUser } from '../../interfaces';
 import {
     IChangeUserPasswordBody,
     IChangeUserRolesBody,
-    ICreateUserBody,
     IGetUserListQuery,
     IUpdateUserBody,
 } from './user.interface';
 import {
-    createUser,
     deleteUser,
     getUserById,
     getUserList,
@@ -30,27 +28,6 @@ export const getUserListController = async (
         return response
             .status(HttpStatus.OK)
             .send(new SuccessResponse(userList));
-    } catch (error) {
-        const errorWithCode = error as ErrorWithCode;
-        return response
-            .status(errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR)
-            .send(
-                new ErrorResponse(
-                    errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
-                    errorWithCode.message
-                )
-            );
-    }
-};
-
-export const createUserController = async (
-    request: IRequestWithUser<{}, {}, ICreateUserBody, {}>,
-    response: Response
-) => {
-    const { body } = request;
-    try {
-        const user = await createUser(body);
-        return response.status(HttpStatus.OK).send(new SuccessResponse(user));
     } catch (error) {
         const errorWithCode = error as ErrorWithCode;
         return response

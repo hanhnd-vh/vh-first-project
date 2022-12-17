@@ -1,6 +1,5 @@
 import { Router } from 'express';
 import {
-    createUserController,
     deleteUserController,
     getUserDetailController,
     getUserListController,
@@ -12,7 +11,6 @@ import {
 const userRouter = Router();
 
 userRouter.get('/', getUserListController);
-userRouter.post('/', createUserController);
 userRouter.get('/:id', getUserDetailController);
 userRouter.patch('/:id', updateUserProfileController);
 userRouter.patch('/:id/change-password', updateUserPasswordController);

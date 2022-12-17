@@ -6,13 +6,10 @@ import {
 
 export interface IErrorResponse {
     key?: string;
-    errorCode: number;
+    code: number;
     message?: string;
 }
 
-export interface IError {
-    code: number;
-}
 export class SuccessResponse {
     constructor(data = {}) {
         return {
