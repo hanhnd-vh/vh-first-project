@@ -9,10 +9,7 @@ import sequelize from '../sequelize';
 import { TableName } from './constant';
 import { Role } from './role.model';
 
-export class User extends Model<
-    InferAttributes<User>,
-    InferCreationAttributes<User>
-> {
+export class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
     declare id: CreationOptional<number>;
     declare username: string;
     declare password: string;
@@ -50,5 +47,5 @@ User.init(
         updatedAt: 'updated_at',
         deletedAt: 'deleted_at',
         underscored: true,
-    }
+    },
 );

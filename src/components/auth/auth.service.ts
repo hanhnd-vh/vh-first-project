@@ -14,15 +14,9 @@ export const logIn = async (body: ILoginBody) => {
     if (!existedUser)
         throw new ErrorWithCode(HttpStatus.ITEM_NOT_FOUND, 'user not existed!');
 
-    const isPasswordMatched = await compare(
-        body.password,
-        existedUser.password
-    );
+    const isPasswordMatched = await compare(body.password, existedUser.password);
     if (!isPasswordMatched)
-        throw new ErrorWithCode(
-            HttpStatus.BAD_REQUEST,
-            'invalid username or password!'
-        );
+        throw new ErrorWithCode(HttpStatus.BAD_REQUEST, 'invalid username or password!');
 
     const token = await signUserToken(existedUser);
     return token;
@@ -35,10 +29,7 @@ export const register = async (body: IRegisterBody) => {
 
     const isRolesExisted = await checkExistedRoleIds(body.roleIds);
     if (!isRolesExisted)
-        throw new ErrorWithCode(
-            HttpStatus.ITEM_NOT_FOUND,
-            'some roles are not existed!'
-        );
+        throw new ErrorWithCode(HttpStatus.ITEM_NOT_FOUND, 'some roles are not existed!');
 
     const hashedPassword = await hash(body.password);
     const createdUser = await User.create({
@@ -48,10 +39,7 @@ export const register = async (body: IRegisterBody) => {
     await createdUser.setRoles(body.roleIds);
     const user = await getUserById(createdUser.id);
     if (!user)
-        throw new ErrorWithCode(
-            HttpStatus.INTERNAL_SERVER_ERROR,
-            'an error occurred!'
-        );
+        throw new ErrorWithCode(HttpStatus.INTERNAL_SERVER_ERROR, 'an error occurred!');
     const token = await signUserToken(user);
     return token;
 };
@@ -80,7 +68,7 @@ const signUserToken = async (user: User) => {
     const roleIds = (user.roles || []).map((role) => role.id);
     const roles = (user.roles || []).map((role) => role.name);
     const permissions = ((await getPermissionsByRoleIds(roleIds)) || []).map(
-        (permission) => permission.name
+        (permission) => permission.name,
     );
     const token = await signToken({
         userId: user.id,

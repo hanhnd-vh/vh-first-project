@@ -8,10 +8,7 @@ import {
 import sequelize from '../sequelize';
 import { TableName } from './constant';
 
-export class Role extends Model<
-    InferAttributes<Role>,
-    InferCreationAttributes<Role>
-> {
+export class Role extends Model<InferAttributes<Role>, InferCreationAttributes<Role>> {
     declare id: CreationOptional<number>;
     declare name: string;
     declare setPermissions: (permissionIds: number[]) => Promise<void>;
@@ -37,5 +34,5 @@ Role.init(
         updatedAt: 'updated_at',
         deletedAt: 'deleted_at',
         underscored: true,
-    }
+    },
 );

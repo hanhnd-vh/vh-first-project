@@ -1,10 +1,7 @@
 import { Router } from 'express';
 import { Roles } from '../../constants';
 import { roles } from '../../middlewares/authorize.middleware';
-import {
-    validateBody,
-    validateQuery,
-} from '../../middlewares/validator.middleware';
+import { validateBody, validateQuery } from '../../middlewares/validator.middleware';
 import {
     createPermissionController,
     deletePermissionController,
@@ -24,20 +21,20 @@ permissionRouter.get(
     '/',
     validateQuery(permissionGetListQuerySchema),
     roles(Roles.ADMIN),
-    getPermissionListController
+    getPermissionListController,
 );
 permissionRouter.post(
     '/',
     validateBody(createPermissionSchema),
     roles(Roles.ADMIN),
-    createPermissionController
+    createPermissionController,
 );
 permissionRouter.get('/:id', roles(Roles.ADMIN), getPermissionDetailController);
 permissionRouter.patch(
     '/:id',
     validateBody(updatePermissionSchema),
     roles(Roles.ADMIN),
-    updatePermissionController
+    updatePermissionController,
 );
 permissionRouter.delete('/:id', roles(Roles.ADMIN), deletePermissionController);
 

@@ -7,15 +7,14 @@ import { IRequestWithUser } from './../interfaces';
 
 const extractTokenFromHeader = (authorization: string) => {
     const token = authorization.split(' ')[1];
-    if (!token)
-        throw new ErrorWithCode(HttpStatus.BAD_REQUEST, 'Invalid token');
+    if (!token) throw new ErrorWithCode(HttpStatus.BAD_REQUEST, 'Invalid token');
     return token;
 };
 
 export const authenticate = async (
     request: IRequestWithUser,
     response: Response,
-    next: NextFunction
+    next: NextFunction,
 ) => {
     const { authorization } = request.headers;
     if (!authorization || Array.isArray(authorization)) {
@@ -24,9 +23,7 @@ export const authenticate = async (
             .send(new ErrorResponse(HttpStatus.UNAUTHORIZED, 'Unauthorized'));
     }
     try {
-        const token = extractTokenFromHeader(
-            request.headers.authorization || ''
-        );
+        const token = extractTokenFromHeader(request.headers.authorization || '');
         const payload = await verifyToken(token);
         Object.assign(request, payload);
         next();
@@ -37,8 +34,8 @@ export const authenticate = async (
             .send(
                 new ErrorResponse(
                     errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
-                    errorWithCode.message
-                )
+                    errorWithCode.message,
+                ),
             );
     }
 };

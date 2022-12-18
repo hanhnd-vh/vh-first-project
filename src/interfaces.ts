@@ -11,7 +11,7 @@ export interface IRequestWithUser<
     P extends {} = {},
     ResB extends {} = {},
     ReqB extends {} = {},
-    Q extends {} = {}
+    Q extends {} = {},
 > extends Request<P, ResB, ReqB, Q> {
     userId?: number;
     username?: string;

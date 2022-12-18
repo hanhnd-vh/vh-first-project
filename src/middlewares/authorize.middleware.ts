@@ -7,11 +7,7 @@ import { ErrorWithCode } from '../exception/error.exception';
 import { IRequestWithUser } from '../interfaces';
 
 export const roles = (roles: Roles | Roles[] = []) => {
-    return async (
-        request: IRequestWithUser,
-        response: Response,
-        next: NextFunction
-    ) => {
+    return async (request: IRequestWithUser, response: Response, next: NextFunction) => {
         try {
             // this route doesn't require any role => allow
             if (!roles.length) next();
@@ -27,7 +23,7 @@ export const roles = (roles: Roles | Roles[] = []) => {
                 // this user doesn't have required roles
                 throw new ErrorWithCode(
                     HttpStatus.FORBIDDEN,
-                    `You don't have permission on this site`
+                    `You don't have permission on this site`,
                 );
             }
             next();
@@ -38,41 +34,31 @@ export const roles = (roles: Roles | Roles[] = []) => {
                 .send(
                     new ErrorResponse(
                         errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
-                        errorWithCode.message
-                    )
+                        errorWithCode.message,
+                    ),
                 );
         }
     };
 };
 
 export const permissions = (permissions: Permissions | Permissions[] = []) => {
-    return async (
-        request: IRequestWithUser,
-        response: Response,
-        next: NextFunction
-    ) => {
+    return async (request: IRequestWithUser, response: Response, next: NextFunction) => {
         try {
             // this route doesn't require any permissions => allow
             if (!permissions.length) next();
 
             const userPermissions = request.permissions || [];
 
-            if (
-                !isArray(permissions) &&
-                userPermissions.includes(permissions)
-            ) {
+            if (!isArray(permissions) && userPermissions.includes(permissions)) {
                 next();
             }
 
-            const intersectionPermissions = intersection(
-                permissions,
-                userPermissions
-            );
+            const intersectionPermissions = intersection(permissions, userPermissions);
             if (intersectionPermissions.length < permissions.length) {
                 // this user doesn't have required permissions
                 throw new ErrorWithCode(
                     HttpStatus.FORBIDDEN,
-                    `You don't have permission on this site`
+                    `You don't have permission on this site`,
                 );
             }
             next();
@@ -83,8 +69,8 @@ export const permissions = (permissions: Permissions | Permissions[] = []) => {
                 .send(
                     new ErrorResponse(
                         errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
-                        errorWithCode.message
-                    )
+                        errorWithCode.message,
+                    ),
                 );
         }
     };

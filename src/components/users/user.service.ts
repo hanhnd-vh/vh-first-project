@@ -32,8 +32,7 @@ export const getUserById = async (userId: number) => {
         },
         include: userIncludes,
     });
-    if (!user)
-        throw new ErrorWithCode(HttpStatus.ITEM_NOT_FOUND, 'user not found!');
+    if (!user) throw new ErrorWithCode(HttpStatus.ITEM_NOT_FOUND, 'user not found!');
     return user;
 };
 
@@ -68,10 +67,7 @@ export const getUserList = async (query: IGetUserListQuery) => {
     return { items: rows, totalItems: count };
 };
 
-export const updateUserProfile = async (
-    userId: number,
-    body: IUpdateUserBody
-) => {
+export const updateUserProfile = async (userId: number, body: IUpdateUserBody) => {
     const user = await getUserById(userId);
     const updatedUser = await user.update(body);
     return updatedUser;
@@ -79,7 +75,7 @@ export const updateUserProfile = async (
 
 export const updateUserPassword = async (
     userId: number,
-    body: IChangeUserPasswordBody
+    body: IChangeUserPasswordBody,
 ) => {
     const user = await getUserById(userId);
     const hashedPassword = await hash(body.password);
@@ -89,10 +85,7 @@ export const updateUserPassword = async (
     return updatedUser;
 };
 
-export const updateUserRoles = async (
-    userId: number,
-    body: IChangeUserRolesBody
-) => {
+export const updateUserRoles = async (userId: number, body: IChangeUserRolesBody) => {
     const user = await getUserById(userId);
     await user.setRoles(body.roleIds);
     const updatedUser = await getUserById(userId);

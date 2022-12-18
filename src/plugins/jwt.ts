@@ -14,7 +14,7 @@ export interface IJwtPayload {
 export const signToken = async (
     payload: IJwtPayload,
     secretKey = ACCESS_TOKEN_SECRET_KEY,
-    expiresIn = ACCESS_TOKEN_SECRET_EXPIRES_IN
+    expiresIn = ACCESS_TOKEN_SECRET_EXPIRES_IN,
 ) => {
     return jwt.sign(payload, secretKey, {
         expiresIn,
@@ -23,7 +23,7 @@ export const signToken = async (
 
 export const verifyToken = async (
     token: string,
-    secretKey = ACCESS_TOKEN_SECRET_KEY
+    secretKey = ACCESS_TOKEN_SECRET_KEY,
 ): Promise<IJwtPayload> => {
     return jwt.verify(token, secretKey) as IJwtPayload;
 };

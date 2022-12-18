@@ -1,9 +1,4 @@
-import {
-    DataTypes,
-    InferAttributes,
-    InferCreationAttributes,
-    Model,
-} from 'sequelize';
+import { DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
 import sequelize from '../sequelize';
 import { TableName } from './constant';
 import { Role } from './role.model';
@@ -43,5 +38,5 @@ UserRole.init(
         updatedAt: 'updated_at',
         deletedAt: 'deleted_at',
         underscored: true,
-    }
+    },
 );

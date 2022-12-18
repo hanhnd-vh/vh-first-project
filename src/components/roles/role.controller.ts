@@ -20,7 +20,7 @@ import {
 
 export const createRoleController = async (
     request: Request<{}, {}, ICreateRoleBody, {}>,
-    response: Response
+    response: Response,
 ) => {
     const { body } = request;
     try {
@@ -33,22 +33,20 @@ export const createRoleController = async (
             .send(
                 new ErrorResponse(
                     errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
-                    errorWithCode.message
-                )
+                    errorWithCode.message,
+                ),
             );
     }
 };
 
 export const getRoleListController = async (
     request: Request<{}, {}, {}, IGetRoleListQuery>,
-    response: Response
+    response: Response,
 ) => {
     const { query } = request;
     try {
         const roleList = await getRoleList(query);
-        return response
-            .status(HttpStatus.OK)
-            .send(new SuccessResponse(roleList));
+        return response.status(HttpStatus.OK).send(new SuccessResponse(roleList));
     } catch (error) {
         const errorWithCode = error as ErrorWithCode;
         return response
@@ -56,15 +54,15 @@ export const getRoleListController = async (
             .send(
                 new ErrorResponse(
                     errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
-                    errorWithCode.message
-                )
+                    errorWithCode.message,
+                ),
             );
     }
 };
 
 export const getRoleDetailController = async (
     request: Request<{ id: number }, {}, {}, {}>,
-    response: Response
+    response: Response,
 ) => {
     const { id } = request.params;
 
@@ -78,15 +76,15 @@ export const getRoleDetailController = async (
             .send(
                 new ErrorResponse(
                     errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
-                    errorWithCode.message
-                )
+                    errorWithCode.message,
+                ),
             );
     }
 };
 
 export const updateRoleController = async (
     request: Request<{ id: number }, {}, IUpdateRoleBody, {}>,
-    response: Response
+    response: Response,
 ) => {
     const { body, params } = request;
     const { id } = params;
@@ -101,15 +99,15 @@ export const updateRoleController = async (
             .send(
                 new ErrorResponse(
                     errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
-                    errorWithCode.message
-                )
+                    errorWithCode.message,
+                ),
             );
     }
 };
 
 export const changeRolePermissionsController = async (
     request: Request<{ id: number }, {}, IChangeRolePermissionsBody, {}>,
-    response: Response
+    response: Response,
 ) => {
     const { body, params } = request;
     const { id } = params;
@@ -125,15 +123,15 @@ export const changeRolePermissionsController = async (
             .send(
                 new ErrorResponse(
                     errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
-                    errorWithCode.message
-                )
+                    errorWithCode.message,
+                ),
             );
     }
 };
 
 export const deleteRoleController = async (
     request: Request<{ id: number }, {}, {}, {}>,
-    response: Response
+    response: Response,
 ) => {
     const { id } = request.params;
 
@@ -147,8 +145,8 @@ export const deleteRoleController = async (
             .send(
                 new ErrorResponse(
                     errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
-                    errorWithCode.message
-                )
+                    errorWithCode.message,
+                ),
             );
     }
 };

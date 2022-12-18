@@ -20,14 +20,12 @@ import {
 
 export const getUserListController = async (
     request: IRequestWithUser<{}, {}, {}, IGetUserListQuery>,
-    response: Response
+    response: Response,
 ) => {
     const { query } = request;
     try {
         const userList = await getUserList(query);
-        return response
-            .status(HttpStatus.OK)
-            .send(new SuccessResponse(userList));
+        return response.status(HttpStatus.OK).send(new SuccessResponse(userList));
     } catch (error) {
         const errorWithCode = error as ErrorWithCode;
         return response
@@ -35,15 +33,15 @@ export const getUserListController = async (
             .send(
                 new ErrorResponse(
                     errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
-                    errorWithCode.message
-                )
+                    errorWithCode.message,
+                ),
             );
     }
 };
 
 export const getUserDetailController = async (
     request: IRequestWithUser<{ id: number }, {}, {}, {}>,
-    response: Response
+    response: Response,
 ) => {
     const { id } = request.params;
     try {
@@ -56,15 +54,15 @@ export const getUserDetailController = async (
             .send(
                 new ErrorResponse(
                     errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
-                    errorWithCode.message
-                )
+                    errorWithCode.message,
+                ),
             );
     }
 };
 
 export const updateUserProfileController = async (
     request: IRequestWithUser<{ id: number }, {}, IUpdateUserBody, {}>,
-    response: Response
+    response: Response,
 ) => {
     const { body, params } = request;
     const { id } = params;
@@ -79,15 +77,15 @@ export const updateUserProfileController = async (
             .send(
                 new ErrorResponse(
                     errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
-                    errorWithCode.message
-                )
+                    errorWithCode.message,
+                ),
             );
     }
 };
 
 export const updateUserPasswordController = async (
     request: IRequestWithUser<{ id: number }, {}, IChangeUserPasswordBody, {}>,
-    response: Response
+    response: Response,
 ) => {
     const { body, params } = request;
     const { id } = params;
@@ -102,15 +100,15 @@ export const updateUserPasswordController = async (
             .send(
                 new ErrorResponse(
                     errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
-                    errorWithCode.message
-                )
+                    errorWithCode.message,
+                ),
             );
     }
 };
 
 export const updateUserRolesController = async (
     request: IRequestWithUser<{ id: number }, {}, IChangeUserRolesBody, {}>,
-    response: Response
+    response: Response,
 ) => {
     const { body, params } = request;
     const { id } = params;
@@ -125,15 +123,15 @@ export const updateUserRolesController = async (
             .send(
                 new ErrorResponse(
                     errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
-                    errorWithCode.message
-                )
+                    errorWithCode.message,
+                ),
             );
     }
 };
 
 export const deleteUserController = async (
     request: IRequestWithUser<{ id: number }, {}, {}, {}>,
-    response: Response
+    response: Response,
 ) => {
     const { id } = request.params;
     try {
@@ -146,8 +144,8 @@ export const deleteUserController = async (
             .send(
                 new ErrorResponse(
                     errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
-                    errorWithCode.message
-                )
+                    errorWithCode.message,
+                ),
             );
     }
 };

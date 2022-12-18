@@ -9,7 +9,7 @@ export const validateBody = (schema: Joi.ObjectSchema) => {
     return async (
         request: Request<{}, {}, {}, {}>,
         response: Response,
-        next: NextFunction
+        next: NextFunction,
     ) => {
         const { body } = request;
         try {
@@ -26,11 +26,7 @@ export const validateBody = (schema: Joi.ObjectSchema) => {
                 return response
                     .status(HttpStatus.BAD_REQUEST)
                     .send(
-                        new ErrorResponse(
-                            HttpStatus.BAD_REQUEST,
-                            'Bad request!',
-                            errors
-                        )
+                        new ErrorResponse(HttpStatus.BAD_REQUEST, 'Bad request!', errors),
                     );
             }
             next();
@@ -41,8 +37,8 @@ export const validateBody = (schema: Joi.ObjectSchema) => {
                 .send(
                     new ErrorResponse(
                         errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
-                        errorWithCode.message
-                    )
+                        errorWithCode.message,
+                    ),
                 );
         }
     };
@@ -52,7 +48,7 @@ export const validateQuery = (schema: Joi.ObjectSchema) => {
     return async (
         request: Request<{}, {}, {}, {}>,
         response: Response,
-        next: NextFunction
+        next: NextFunction,
     ) => {
         const { query } = request;
         try {
@@ -69,11 +65,7 @@ export const validateQuery = (schema: Joi.ObjectSchema) => {
                 return response
                     .status(HttpStatus.BAD_REQUEST)
                     .send(
-                        new ErrorResponse(
-                            HttpStatus.BAD_REQUEST,
-                            'Bad request!',
-                            errors
-                        )
+                        new ErrorResponse(HttpStatus.BAD_REQUEST, 'Bad request!', errors),
                     );
             }
             next();
@@ -84,8 +76,8 @@ export const validateQuery = (schema: Joi.ObjectSchema) => {
                 .send(
                     new ErrorResponse(
                         errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
-                        errorWithCode.message
-                    )
+                        errorWithCode.message,
+                    ),
                 );
         }
     };

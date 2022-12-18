@@ -7,7 +7,7 @@ import { logIn, register } from './auth.service';
 
 export const loginController = async (
     request: Request<{}, {}, ILoginBody, {}>,
-    response: Response
+    response: Response,
 ) => {
     const { body } = request;
     try {
@@ -20,15 +20,15 @@ export const loginController = async (
             .send(
                 new ErrorResponse(
                     errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
-                    errorWithCode.message
-                )
+                    errorWithCode.message,
+                ),
             );
     }
 };
 
 export const registerController = async (
     request: Request<{}, {}, IRegisterBody, {}>,
-    response: Response
+    response: Response,
 ) => {
     const { body } = request;
     try {
@@ -41,8 +41,8 @@ export const registerController = async (
             .send(
                 new ErrorResponse(
                     errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
-                    errorWithCode.message
-                )
+                    errorWithCode.message,
+                ),
             );
     }
 };

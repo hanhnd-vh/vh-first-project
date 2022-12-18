@@ -1,10 +1,7 @@
 import { Router } from 'express';
 import { Permissions } from '../../constants';
 import { permissions } from '../../middlewares/authorize.middleware';
-import {
-    validateBody,
-    validateQuery,
-} from '../../middlewares/validator.middleware';
+import { validateBody, validateQuery } from '../../middlewares/validator.middleware';
 import {
     deleteUserController,
     getUserDetailController,
@@ -26,35 +23,27 @@ userRouter.get(
     '/',
     validateQuery(userGetListQuerySchema),
     permissions([Permissions.READ_USER]),
-    getUserListController
+    getUserListController,
 );
-userRouter.get(
-    '/:id',
-    permissions([Permissions.READ_USER]),
-    getUserDetailController
-);
+userRouter.get('/:id', permissions([Permissions.READ_USER]), getUserDetailController);
 userRouter.patch(
     '/:id',
     validateBody(updateUserProfileSchema),
     permissions([Permissions.UPDATE_USER_PROFILE]),
-    updateUserProfileController
+    updateUserProfileController,
 );
 userRouter.patch(
     '/:id/change-password',
     validateBody(updateUserPasswordSchema),
     permissions([Permissions.CHANGE_PASSWORD]),
-    updateUserPasswordController
+    updateUserPasswordController,
 );
 userRouter.patch(
     '/:id/change-roles',
     validateBody(updateUserRolesSchema),
     permissions([Permissions.CHANGE_USER_ROLES]),
-    updateUserRolesController
+    updateUserRolesController,
 );
-userRouter.delete(
-    '/:id',
-    permissions([Permissions.DELETE_USER]),
-    deleteUserController
-);
+userRouter.delete('/:id', permissions([Permissions.DELETE_USER]), deleteUserController);
 
 export default userRouter;

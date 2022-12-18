@@ -19,7 +19,7 @@ class SequelizeProvider {
             {
                 host: DATABASE_HOST,
                 dialect: DATABASE_DIALECT,
-            }
+            },
         );
     }
 

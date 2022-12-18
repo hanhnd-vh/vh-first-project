@@ -24,7 +24,7 @@ export class ErrorResponse {
     constructor(
         code = HttpStatus.INTERNAL_SERVER_ERROR,
         message = DEFAULT_ERROR_MESSAGE_RESPONSE,
-        errors: IErrorResponse[] = []
+        errors: IErrorResponse[] = [],
     ) {
         return {
             code,

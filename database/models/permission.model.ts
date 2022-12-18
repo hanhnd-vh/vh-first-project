@@ -36,5 +36,5 @@ Permission.init(
         updatedAt: 'updated_at',
         deletedAt: 'deleted_at',
         underscored: true,
-    }
+    },
 );

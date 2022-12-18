@@ -27,8 +27,7 @@ const roleIncludes = [
 
 export const createRole = async (body: ICreateRoleBody) => {
     const isRoleExisted = await checkExistedRoleName(body.name);
-    if (isRoleExisted)
-        throw new ErrorWithCode(HttpStatus.ITEM_EXISTED, 'role existed!');
+    if (isRoleExisted) throw new ErrorWithCode(HttpStatus.ITEM_EXISTED, 'role existed!');
     const createdRole = await Role.create(body);
     const role = await getRoleById(createdRole.id);
     return role;
@@ -38,8 +37,7 @@ export const getRoleById = async (roleId: number) => {
     const role = await Role.findByPk(roleId, {
         include: roleIncludes,
     });
-    if (!role)
-        throw new ErrorWithCode(HttpStatus.ITEM_NOT_FOUND, 'role not found!');
+    if (!role) throw new ErrorWithCode(HttpStatus.ITEM_NOT_FOUND, 'role not found!');
     return role;
 };
 
@@ -68,17 +66,12 @@ export const updateRole = async (roleId: number, body: IUpdateRoleBody) => {
 
 export const changeRolePermissions = async (
     roleId: number,
-    body: IChangeRolePermissionsBody
+    body: IChangeRolePermissionsBody,
 ) => {
     const role = await getRoleById(roleId);
-    const isPermissionIdsExisted = await checkExistedPermissionIds(
-        body.permissionIds
-    );
+    const isPermissionIdsExisted = await checkExistedPermissionIds(body.permissionIds);
     if (!isPermissionIdsExisted)
-        throw new ErrorWithCode(
-            HttpStatus.ITEM_NOT_FOUND,
-            'some permission not existed'
-        );
+        throw new ErrorWithCode(HttpStatus.ITEM_NOT_FOUND, 'some permission not existed');
     await role.setPermissions(body.permissionIds);
     const updatedRole = await getRoleById(roleId);
     return updatedRole;

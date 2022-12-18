@@ -26,10 +26,7 @@ export const createPermission = async (body: ICreatePermissionBody) => {
 export const getPermissionById = async (permissionId: number) => {
     const permission = await Permission.findByPk(permissionId, {});
     if (!permission)
-        throw new ErrorWithCode(
-            HttpStatus.ITEM_NOT_FOUND,
-            'permission not found!'
-        );
+        throw new ErrorWithCode(HttpStatus.ITEM_NOT_FOUND, 'permission not found!');
     return permission;
 };
 
@@ -52,7 +49,7 @@ export const getPermissionList = async (query: IGetPermissionListQuery) => {
 
 export const updatePermission = async (
     permissionId: number,
-    body: IUpdatePermissionBody
+    body: IUpdatePermissionBody,
 ) => {
     const permission = await getPermissionById(permissionId);
     const updatedPermission = await permission.update(body);
