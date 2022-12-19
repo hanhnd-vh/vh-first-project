@@ -44,7 +44,7 @@ const bootstrap = async () => {
             foreignKey: 'permission_id',
             as: 'roles',
         });
-        // User - Role: n - 1
+        // User - Role: n - n
         User.belongsToMany(Role, {
             through: UserRole,
             foreignKey: 'user_id',

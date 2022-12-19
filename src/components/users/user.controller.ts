@@ -66,8 +66,6 @@ export const getUserSelfProfileController = async (
 ) => {
     const { userId } = request;
     try {
-        console.log('userId', userId);
-
         const user = await getUserById(userId!);
         return response.status(HttpStatus.OK).send(new SuccessResponse(user));
     } catch (error) {
@@ -91,7 +89,7 @@ export const updateUserProfileController = async (
     const { id } = params;
 
     try {
-        const user = await updateUserProfile(request.userId || id, body); // temporary util request.userId works
+        const user = await updateUserProfile(request.userId || id, body);
         return response.status(HttpStatus.OK).send(new SuccessResponse(user));
     } catch (error) {
         const errorWithCode = error as ErrorWithCode;
