@@ -13,6 +13,7 @@ export class RoleGroup extends Model<
 > {
     declare id: CreationOptional<number>;
     declare name: string;
+    declare setRoles: (roleIds: number[]) => Promise<void>;
 }
 
 RoleGroup.init(

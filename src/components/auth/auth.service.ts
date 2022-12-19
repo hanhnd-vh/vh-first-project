@@ -1,9 +1,10 @@
-import { uniq } from 'lodash';
+import { uniq, uniqBy } from 'lodash';
 import { Role, User } from '../../../database/models';
 import { HttpStatus } from '../../common/constants';
 import { ErrorWithCode } from '../../exception/error.exception';
 import { compare, hash } from '../../plugins/bcrypt';
 import { signToken } from '../../plugins/jwt';
+import { getRolesByRoleGroupIds } from '../roles/role.service';
 import { getPermissionsByRoleIds } from './../permissions/permission.service';
 import { getUserById, userIncludes } from './../users/user.service';
 import { ILoginBody, IRegisterBody } from './auth.interface';
@@ -62,8 +63,11 @@ const getUserByUsername = async (username: string) => {
 };
 
 const signUserToken = async (user: User) => {
-    const roleIds = (user.roles || []).map((role) => role.id);
-    const roles = (user.roles || []).map((role) => role.name);
+    const roleGroupIds = (user.roleGroups || []).map((roleGroup) => roleGroup.id);
+    const roleInRoleGroups = await getRolesByRoleGroupIds(roleGroupIds);
+    const userRoles = uniqBy([...roleInRoleGroups, ...(user.roles || [])], 'id');
+    const roleIds = userRoles.map((role) => role.id);
+    const roles = userRoles.map((role) => role.name);
     const permissions = ((await getPermissionsByRoleIds(roleIds)) || []).map(
         (permission) => permission.name,
     );

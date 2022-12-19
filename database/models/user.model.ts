@@ -1,3 +1,4 @@
+import { RoleGroup } from './role-group.model';
 import {
     CreationOptional,
     DataTypes,
@@ -16,6 +17,8 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
     declare email: string;
     declare setRoles: (roleIds: number[]) => Promise<void>;
     declare roles?: Role[];
+    declare setRoleGroups: (roleGroupIds: number[]) => Promise<void>;
+    declare roleGroups?: RoleGroup[];
 }
 
 User.init(

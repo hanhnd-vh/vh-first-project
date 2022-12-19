@@ -9,11 +9,13 @@ import {
     getUserSelfProfileController,
     updateUserPasswordController,
     updateUserProfileController,
+    updateUserRoleGroupsController,
     updateUserRolesController,
 } from './user.controller';
 import {
     updateUserPasswordSchema,
     updateUserProfileSchema,
+    updateUserRoleGroupsSchema,
     updateUserRolesSchema,
     userGetListQuerySchema,
 } from './user.validator';
@@ -45,6 +47,12 @@ userRouter.patch(
     validateBody(updateUserRolesSchema),
     permissions([Permissions.CHANGE_USER_ROLES]),
     updateUserRolesController,
+);
+userRouter.patch(
+    '/:id/change-role-groups',
+    validateBody(updateUserRoleGroupsSchema),
+    permissions([Permissions.CHANGE_USER_ROLES]),
+    updateUserRoleGroupsController,
 );
 userRouter.delete('/:id', permissions([Permissions.DELETE_USER]), deleteUserController);
 

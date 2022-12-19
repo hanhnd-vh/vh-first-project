@@ -1,3 +1,4 @@
+import { RoleGroup } from './../../../database/models/role-group.model';
 import { uniq } from 'lodash';
 import { Permission, Role } from '../../../database/models';
 import { HttpStatus } from '../../common/constants';
@@ -99,4 +100,20 @@ export const checkExistedPermissionIds = async (permissionIds: number[]) => {
         },
     });
     return existedPermissionList.length === uniqPermissionIds.length;
+};
+
+export const getRolesByRoleGroupIds = async (roleGroupIds: number[]) => {
+    const permissions = await Role.findAll({
+        include: [
+            {
+                model: RoleGroup,
+                attributes: ['id'],
+                as: 'roleGroups',
+                where: {
+                    id: roleGroupIds,
+                },
+            },
+        ],
+    });
+    return permissions;
 };

@@ -19,6 +19,12 @@ export enum Permissions {
     READ_ROLE = 'READ_ROLE',
     UPDATE_ROLE = 'UPDATE_ROLE',
     DELETE_ROLE = 'DELETE_ROLE',
+
+    // Role Group
+    CREATE_ROLE_GROUP = 'CREATE_ROLE_GROUP',
+    READ_ROLE_GROUP = 'READ_ROLE_GROUP',
+    UPDATE_ROLE_GROUP = 'UPDATE_ROLE_GROUP',
+    DELETE_ROLE_GROUP = 'DELETE_ROLE_GROUP',
 }
 
 export enum OrderDirection {

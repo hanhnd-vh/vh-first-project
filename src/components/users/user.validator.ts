@@ -17,3 +17,7 @@ export const updateUserPasswordSchema = Joi.object().keys({
 export const updateUserRolesSchema = Joi.object().keys({
     roleIds: Joi.array().items(Joi.number()),
 });
+
+export const updateUserRoleGroupsSchema = Joi.object().keys({
+    roleGroupIds: Joi.array().items(Joi.number()),
+});

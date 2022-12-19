@@ -1,4 +1,4 @@
-import { Role, User } from '../../../database/models';
+import { Role, RoleGroup, User } from '../../../database/models';
 import { HttpStatus } from '../../common/constants';
 import { ErrorWithCode } from '../../exception/error.exception';
 import { hash } from '../../plugins/bcrypt';
@@ -10,6 +10,7 @@ import {
 } from './../../constants';
 import {
     IChangeUserPasswordBody,
+    IChangeUserRoleGroupsBody,
     IChangeUserRolesBody,
     IGetUserListQuery,
     IUpdateUserBody,
@@ -20,6 +21,11 @@ export const userIncludes = [
     {
         model: Role,
         as: 'roles',
+        through: { attributes: [] },
+    },
+    {
+        model: RoleGroup,
+        as: 'roleGroups',
         through: { attributes: [] },
     },
 ];
@@ -87,6 +93,16 @@ export const updateUserPassword = async (
 export const updateUserRoles = async (userId: number, body: IChangeUserRolesBody) => {
     const user = await getUserById(userId);
     await user.setRoles(body.roleIds);
+    const updatedUser = await getUserById(userId);
+    return updatedUser;
+};
+
+export const updateUserRoleGroups = async (
+    userId: number,
+    body: IChangeUserRoleGroupsBody,
+) => {
+    const user = await getUserById(userId);
+    await user.setRoleGroups(body.roleGroupIds);
     const updatedUser = await getUserById(userId);
     return updatedUser;
 };

@@ -20,3 +20,7 @@ export interface IChangeUserPasswordBody {
 export interface IChangeUserRolesBody {
     roleIds: number[];
 }
+
+export interface IChangeUserRoleGroupsBody {
+    roleGroupIds: number[];
+}
