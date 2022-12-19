@@ -1,9 +1,5 @@
 import express from 'express';
-import { Permission } from './database/models/permission.model';
-import { RolePermission } from './database/models/role-permission.model';
-import { Role } from './database/models/role.model';
-import { UserRole } from './database/models/user-roles.model';
-import { User } from './database/models/user.model';
+import { initializeModelRelationships } from './database/models';
 import sequelize from './database/sequelize';
 import authRouter from './src/components/auth';
 import permissionRouter from './src/components/permissions';
@@ -33,28 +29,7 @@ const bootstrap = async () => {
     try {
         await sequelize.authenticate();
         console.log('connected to mysql');
-        // Role - Permission: n - n
-        Role.belongsToMany(Permission, {
-            through: RolePermission,
-            foreignKey: 'role_id',
-            as: 'permissions',
-        });
-        Permission.belongsToMany(Role, {
-            through: RolePermission,
-            foreignKey: 'permission_id',
-            as: 'roles',
-        });
-        // User - Role: n - n
-        User.belongsToMany(Role, {
-            through: UserRole,
-            foreignKey: 'user_id',
-            as: 'roles',
-        });
-        Role.belongsToMany(User, {
-            through: UserRole,
-            foreignKey: 'role_id',
-            as: 'users',
-        });
+        initializeModelRelationships();
     } catch (error) {
         console.log('connect to mysql failed', error);
     }

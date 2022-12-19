@@ -19,7 +19,7 @@ export const roles = (roles: Roles | Roles[] = []) => {
 
             const roleArray = isArray(roles) ? roles : [roles];
             const intersectionRoles = intersection(roleArray, userRoles);
-            if (intersectionRoles.length < roleArray.length) {
+            if (intersectionRoles.length === 0) {
                 // this user doesn't have required roles
                 throw new ErrorWithCode(
                     HttpStatus.FORBIDDEN,

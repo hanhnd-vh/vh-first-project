@@ -1,5 +1,4 @@
-import { Permission } from '../../../database/models/permission.model';
-import { Role } from '../../../database/models/role.model';
+import { Permission, Role } from '../../../database/models';
 import { HttpStatus } from '../../common/constants';
 import {
     DEFAULT_ORDER_BY,

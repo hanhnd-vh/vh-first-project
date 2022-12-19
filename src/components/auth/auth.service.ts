@@ -1,6 +1,5 @@
 import { uniq } from 'lodash';
-import { Role } from '../../../database/models/role.model';
-import { User } from '../../../database/models/user.model';
+import { Role, User } from '../../../database/models';
 import { HttpStatus } from '../../common/constants';
 import { ErrorWithCode } from '../../exception/error.exception';
 import { compare, hash } from '../../plugins/bcrypt';
