@@ -4,6 +4,7 @@ import { PERMISSION_NAME_MAX_LENGTH } from './permission.constant';
 
 export const permissionGetListQuerySchema = Joi.object().keys({
     ...CommonGetListQuerySchema,
+    orderBy: Joi.string().valid('id', 'name').optional(),
 });
 
 export const createPermissionSchema = Joi.object().keys({

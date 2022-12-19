@@ -41,7 +41,7 @@ export const getPermissionList = async (query: IGetPermissionListQuery) => {
 
     const { rows, count } = await Permission.findAndCountAll({
         offset,
-        limit,
+        limit: +limit,
         order: [[`${orderBy}`, `${orderDirection}`]],
     });
     return { items: rows, totalItems: count };

@@ -58,7 +58,7 @@ export const getUserList = async (query: IGetUserListQuery) => {
 
     const { rows, count } = await User.findAndCountAll({
         offset,
-        limit,
+        limit: +limit,
         order: [[`${orderBy}`, `${orderDirection}`]],
         attributes: {
             exclude: userExcludeAttributes,

@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import { Permissions } from '../../constants';
-import { permissions } from '../../middlewares/authorize.middleware';
+import { Permissions, Roles } from '../../constants';
+import { permissions, roles } from '../../middlewares/authorize.middleware';
 import { validateBody, validateQuery } from '../../middlewares/validator.middleware';
 import {
     changeRolePermissionsController,
@@ -25,6 +25,12 @@ roleRouter.get(
     permissions(Permissions.READ_ROLE),
     getRoleListController,
 );
+roleRouter.get(
+    '/get-roles-no-permissions',
+    validateQuery(roleGetListQuerySchema),
+    getRoleListController,
+);
+roleRouter.get('/get-roles-no-validation', getRoleListController);
 roleRouter.post(
     '/',
     validateBody(createRoleSchema),
@@ -41,7 +47,7 @@ roleRouter.patch(
 roleRouter.patch(
     '/:id/change-permissions',
     validateBody(updateRolePermissionsSchema),
-    permissions(Permissions.UPDATE_ROLE),
+    roles(Roles.ADMIN),
     changeRolePermissionsController,
 );
 roleRouter.delete('/:id', permissions(Permissions.DELETE_ROLE), deleteRoleController);

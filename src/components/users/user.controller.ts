@@ -60,6 +60,29 @@ export const getUserDetailController = async (
     }
 };
 
+export const getUserSelfProfileController = async (
+    request: IRequestWithUser,
+    response: Response,
+) => {
+    const { userId } = request;
+    try {
+        console.log('userId', userId);
+
+        const user = await getUserById(userId!);
+        return response.status(HttpStatus.OK).send(new SuccessResponse(user));
+    } catch (error) {
+        const errorWithCode = error as ErrorWithCode;
+        return response
+            .status(errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR)
+            .send(
+                new ErrorResponse(
+                    errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
+                    errorWithCode.message,
+                ),
+            );
+    }
+};
+
 export const updateUserProfileController = async (
     request: IRequestWithUser<{ id: number }, {}, IUpdateUserBody, {}>,
     response: Response,

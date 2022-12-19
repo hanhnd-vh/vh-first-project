@@ -116,7 +116,6 @@ export const changeRolePermissionsController = async (
         const role = await changeRolePermissions(id, body);
         return response.status(HttpStatus.OK).send(new SuccessResponse(role));
     } catch (error) {
-        console.log('got ', error);
         const errorWithCode = error as ErrorWithCode;
         return response
             .status(errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR)

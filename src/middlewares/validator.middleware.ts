@@ -29,7 +29,7 @@ export const validateBody = (schema: Joi.ObjectSchema) => {
                         new ErrorResponse(HttpStatus.BAD_REQUEST, 'Bad request!', errors),
                     );
             }
-            next();
+            return next();
         } catch (error) {
             const errorWithCode = error as ErrorWithCode;
             return response
@@ -68,7 +68,7 @@ export const validateQuery = (schema: Joi.ObjectSchema) => {
                         new ErrorResponse(HttpStatus.BAD_REQUEST, 'Bad request!', errors),
                     );
             }
-            next();
+            return next();
         } catch (error) {
             const errorWithCode = error as ErrorWithCode;
             return response

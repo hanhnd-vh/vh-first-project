@@ -6,7 +6,6 @@ export const registerSchema = Joi.object().keys({
     username: Joi.string().trim().required(),
     email: Joi.string().trim().regex(new RegExp(Regex.EMAIL)).required(),
     password: Joi.string().trim().min(USER_PASSWORD_MIN_LENGTH).required(),
-    roleIds: Joi.array().items(Joi.number()),
 });
 
 export const loginSchema = Joi.object().keys({

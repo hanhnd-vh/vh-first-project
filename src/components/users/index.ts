@@ -6,6 +6,7 @@ import {
     deleteUserController,
     getUserDetailController,
     getUserListController,
+    getUserSelfProfileController,
     updateUserPasswordController,
     updateUserProfileController,
     updateUserRolesController,
@@ -25,6 +26,7 @@ userRouter.get(
     permissions([Permissions.READ_USER]),
     getUserListController,
 );
+userRouter.get('/profile', getUserSelfProfileController);
 userRouter.get('/:id', permissions([Permissions.READ_USER]), getUserDetailController);
 userRouter.patch(
     '/:id',

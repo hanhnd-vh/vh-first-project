@@ -26,7 +26,7 @@ export const authenticate = async (
         const token = extractTokenFromHeader(request.headers.authorization || '');
         const payload = await verifyToken(token);
         Object.assign(request, payload);
-        next();
+        return next();
     } catch (error) {
         const errorWithCode = error as ErrorWithCode;
         return response

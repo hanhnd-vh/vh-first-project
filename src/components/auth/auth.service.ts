@@ -27,16 +27,14 @@ export const register = async (body: IRegisterBody) => {
     if (isUsernameExisted)
         throw new ErrorWithCode(HttpStatus.ITEM_EXISTED, 'username existed!');
 
-    const isRolesExisted = await checkExistedRoleIds(body.roleIds);
-    if (!isRolesExisted)
-        throw new ErrorWithCode(HttpStatus.ITEM_NOT_FOUND, 'some roles are not existed!');
-
     const hashedPassword = await hash(body.password);
     const createdUser = await User.create({
         ...body,
         password: hashedPassword,
     });
-    await createdUser.setRoles(body.roleIds);
+
+    // Set role is user by default
+    await createdUser.setRoles([2]);
     const user = await getUserById(createdUser.id);
     if (!user)
         throw new ErrorWithCode(HttpStatus.INTERNAL_SERVER_ERROR, 'an error occurred!');

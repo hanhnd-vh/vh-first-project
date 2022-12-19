@@ -52,7 +52,7 @@ export const getRoleList = async (query: IGetRoleListQuery) => {
 
     const { rows, count } = await Role.findAndCountAll({
         offset,
-        limit,
+        limit: +limit,
         order: [[`${orderBy}`, `${orderDirection}`]],
     });
     return { items: rows, totalItems: count };

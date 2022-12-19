@@ -10,16 +10,16 @@ export const roles = (roles: Roles | Roles[] = []) => {
     return async (request: IRequestWithUser, response: Response, next: NextFunction) => {
         try {
             // this route doesn't require any role => allow
-            if (!roles.length) next();
+            if (isArray(roles) && !roles.length) return next();
 
             const userRoles = request.roles || [];
-
-            if (!isArray(roles) && userRoles.includes(roles)) {
-                next();
+            if (!isArray(roles) && userRoles.includes(roles as string)) {
+                return next();
             }
 
-            const intersectionRoles = intersection(roles, userRoles);
-            if (intersectionRoles.length < roles.length) {
+            const roleArray = isArray(roles) ? roles : [roles];
+            const intersectionRoles = intersection(roleArray, userRoles);
+            if (intersectionRoles.length < roleArray.length) {
                 // this user doesn't have required roles
                 throw new ErrorWithCode(
                     HttpStatus.FORBIDDEN,
@@ -45,16 +45,22 @@ export const permissions = (permissions: Permissions | Permissions[] = []) => {
     return async (request: IRequestWithUser, response: Response, next: NextFunction) => {
         try {
             // this route doesn't require any permissions => allow
-            if (!permissions.length) next();
+            if (isArray(permissions) && !permissions.length) return next();
 
             const userPermissions = request.permissions || [];
-
-            if (!isArray(permissions) && userPermissions.includes(permissions)) {
-                next();
+            if (
+                !isArray(permissions) &&
+                userPermissions.includes(permissions as string)
+            ) {
+                return next();
             }
 
-            const intersectionPermissions = intersection(permissions, userPermissions);
-            if (intersectionPermissions.length < permissions.length) {
+            const permissionArray = isArray(permissions) ? permissions : [permissions];
+            const intersectionPermissions = intersection(
+                permissionArray,
+                userPermissions,
+            );
+            if (intersectionPermissions.length < permissionArray.length) {
                 // this user doesn't have required permissions
                 throw new ErrorWithCode(
                     HttpStatus.FORBIDDEN,
