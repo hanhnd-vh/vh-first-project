@@ -27,19 +27,19 @@ userRouter.get(
     getUserListController,
 );
 userRouter.get('/profile', getUserSelfProfileController);
-userRouter.get('/:id', permissions([Permissions.READ_USER]), getUserDetailController);
 userRouter.patch(
-    '/:id',
+    '/profile',
     validateBody(updateUserProfileSchema),
     permissions([Permissions.UPDATE_USER_PROFILE]),
     updateUserProfileController,
 );
 userRouter.patch(
-    '/:id/change-password',
+    '/profile/change-password',
     validateBody(updateUserPasswordSchema),
     permissions([Permissions.CHANGE_PASSWORD]),
     updateUserPasswordController,
 );
+userRouter.get('/:id', permissions([Permissions.READ_USER]), getUserDetailController);
 userRouter.patch(
     '/:id/change-roles',
     validateBody(updateUserRolesSchema),

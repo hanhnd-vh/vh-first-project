@@ -85,11 +85,10 @@ export const updateUserProfileController = async (
     request: IRequestWithUser<{ id: number }, {}, IUpdateUserBody, {}>,
     response: Response,
 ) => {
-    const { body, params } = request;
-    const { id } = params;
+    const { body, userId } = request;
 
     try {
-        const user = await updateUserProfile(request.userId || id, body);
+        const user = await updateUserProfile(userId!, body);
         return response.status(HttpStatus.OK).send(new SuccessResponse(user));
     } catch (error) {
         const errorWithCode = error as ErrorWithCode;
@@ -108,11 +107,10 @@ export const updateUserPasswordController = async (
     request: IRequestWithUser<{ id: number }, {}, IChangeUserPasswordBody, {}>,
     response: Response,
 ) => {
-    const { body, params } = request;
-    const { id } = params;
+    const { body, userId } = request;
 
     try {
-        const user = await updateUserPassword(request.userId || id, body);
+        const user = await updateUserPassword(userId!, body);
         return response.status(HttpStatus.OK).send(new SuccessResponse(user));
     } catch (error) {
         const errorWithCode = error as ErrorWithCode;
