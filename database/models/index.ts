@@ -3,6 +3,8 @@ import { RoleGroupRole } from './role-group-role.model';
 import { RoleGroup } from './role-group.model';
 import { RolePermission } from './role-permission.model';
 import { Role } from './role.model';
+import { UserGroupUser } from './user-group-user.model';
+import { UserGroup } from './user-group.model';
 import { UserRole } from './user-roles.model';
 import { User } from './user.model';
 import { UserRoleGroup } from './user_role_group.model';
@@ -52,6 +54,23 @@ export const initializeModelRelationships = () => {
         foreignKey: 'role_group_id',
         as: 'users',
     });
+    // User Group - User: 1 - n (manager)
+    User.belongsTo(UserGroup, {
+        foreignKey: 'manager_id',
+        as: 'manager',
+    });
+    UserGroup.hasOne(User);
+    // User Group - User n - n
+    User.belongsToMany(UserGroup, {
+        through: UserGroupUser,
+        foreignKey: 'user_id',
+        as: 'userGroups',
+    }),
+        UserGroup.belongsToMany(User, {
+            through: UserGroupUser,
+            foreignKey: 'user_group_id',
+            as: 'users',
+        });
 };
 
 export { Permission, RoleGroupRole, RoleGroup, Role, User, UserRole, UserRoleGroup };
