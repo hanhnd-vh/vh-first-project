@@ -4,6 +4,7 @@ import { USER_PASSWORD_MIN_LENGTH } from './user.constant';
 
 export const userGetListQuerySchema = Joi.object().keys({
     ...CommonGetListQuerySchema,
+    roleIds: Joi.array().items(Joi.number()),
 });
 
 export const updateUserProfileSchema = Joi.object().keys({

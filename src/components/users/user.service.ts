@@ -58,6 +58,7 @@ export const getUserList = async (query: IGetUserListQuery) => {
         limit = DEFAULT_PAGE_LIMIT,
         orderBy = DEFAULT_ORDER_BY,
         orderDirection = DEFAULT_ORDER_DIRECTION,
+        roleIds,
     } = query;
     const offset = (+page - 1) * +limit;
 
@@ -68,6 +69,18 @@ export const getUserList = async (query: IGetUserListQuery) => {
         attributes: {
             exclude: userExcludeAttributes,
         },
+        include: {
+            model: Role,
+            as: 'roles',
+            attributes: ['id', 'name'],
+            where: {
+                id: roleIds,
+            },
+            through: {
+                attributes: [],
+            },
+        },
+        distinct: true,
     });
     return { items: rows, totalItems: count };
 };

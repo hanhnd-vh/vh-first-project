@@ -1,6 +1,8 @@
 import { ICommonGetListQuery } from '../../interfaces';
 
-export interface IGetUserListQuery extends ICommonGetListQuery {}
+export interface IGetUserListQuery extends ICommonGetListQuery {
+    roleIds?: number[];
+}
 
 export interface ICreateUserBody {
     username: string;
