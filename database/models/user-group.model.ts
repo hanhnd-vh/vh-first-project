@@ -16,6 +16,7 @@ export class UserGroup extends Model<
     declare id: CreationOptional<number>;
     declare name: string;
     declare managerId: CreationOptional<number>;
+    declare setUsers: (userIds: number[]) => Promise<void>;
 }
 
 UserGroup.init(
@@ -39,7 +40,7 @@ UserGroup.init(
     },
     {
         sequelize: sequelize,
-        tableName: TableName.ROLE_GROUP_ROLE,
+        tableName: TableName.USER_GROUP,
         paranoid: true,
         createdAt: 'created_at',
         updatedAt: 'updated_at',

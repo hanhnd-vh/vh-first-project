@@ -1,7 +1,9 @@
+import { uniq } from 'lodash';
 import { Role, RoleGroup, User } from '../../../database/models';
 import { HttpStatus } from '../../common/constants';
 import { ErrorWithCode } from '../../exception/error.exception';
 import { hash } from '../../plugins/bcrypt';
+import { UserGroup } from './../../../database/models/user-group.model';
 import {
     DEFAULT_ORDER_BY,
     DEFAULT_ORDER_DIRECTION,
@@ -26,6 +28,11 @@ export const userIncludes = [
     {
         model: RoleGroup,
         as: 'roleGroups',
+        through: { attributes: [] },
+    },
+    {
+        model: UserGroup,
+        as: 'userGroups',
         through: { attributes: [] },
     },
 ];
@@ -105,7 +112,12 @@ export const updateUserPassword = async (
 
 export const updateUserRoles = async (userId: number, body: IChangeUserRolesBody) => {
     const user = await getUserById(userId);
-    await user.setRoles(body.roleIds);
+    const uniqRoleIds = uniq(body.roleIds);
+    const isRoleExisted = await checkExistedRoleIds(uniqRoleIds);
+    if (!isRoleExisted) {
+        throw new ErrorWithCode(HttpStatus.ITEM_NOT_FOUND, 'some roles not existed');
+    }
+    await user.setRoles(uniqRoleIds);
     const updatedUser = await getUserById(userId);
     return updatedUser;
 };
@@ -124,4 +136,13 @@ export const deleteUser = async (userId: number) => {
     const user = await getUserById(userId);
     await user.destroy();
     return 'OK';
+};
+
+export const checkExistedRoleIds = async (roleIds: number[]) => {
+    const existedRoleList = await Role.findAll({
+        where: {
+            id: roleIds,
+        },
+    });
+    return existedRoleList.length === roleIds.length;
 };

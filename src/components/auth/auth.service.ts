@@ -42,24 +42,19 @@ export const register = async (body: IRegisterBody) => {
     return token;
 };
 
-const checkExistedRoleIds = async (roleIds: number[]) => {
-    const uniqRoleIds = uniq(roleIds);
-    const existedRoleList = await Role.findAll({
-        where: {
-            id: uniqRoleIds,
-        },
-    });
-    return existedRoleList.length === uniqRoleIds.length;
-};
-
 const getUserByUsername = async (username: string) => {
-    const existedUser = await User.findOne({
-        where: {
-            username,
-        },
-        include: userIncludes,
-    });
-    return existedUser;
+    try {
+        const existedUser = await User.findOne({
+            where: {
+                username,
+            },
+            include: userIncludes,
+        });
+        return existedUser;
+    } catch (error) {
+        console.error('error here', error);
+        throw error;
+    }
 };
 
 const signUserToken = async (user: User) => {

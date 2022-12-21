@@ -1,8 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 const ACCESS_TOKEN_SECRET_KEY = process.env.ACCESS_TOKEN_SECRET_KEY || 'secret';
-const ACCESS_TOKEN_SECRET_EXPIRES_IN =
-    process.env.ACCESS_TOKEN_SECRET_EXPIRES_IN || '10m';
+const ACCESS_TOKEN_SECRET_EXPIRES_IN = process.env.ACCESS_TOKEN_SECRET_EXPIRES_IN || '1d';
 
 export interface IJwtPayload {
     userId: number;

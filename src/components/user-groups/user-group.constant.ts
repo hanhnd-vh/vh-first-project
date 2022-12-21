@@ -1,0 +1,1 @@
+export const USER_GROUP_NAME_MAX_LENGTH = 200;

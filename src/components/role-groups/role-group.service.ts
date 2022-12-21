@@ -8,6 +8,7 @@ import {
     DEFAULT_PAGE_VALUE,
 } from '../../constants';
 import { ErrorWithCode } from '../../exception/error.exception';
+import { checkExistedRoleIds } from '../users/user.service';
 import {
     IChangeRoleGroupRolesBody,
     ICreateRoleGroupBody,
@@ -73,10 +74,11 @@ export const changeRoleGroupRoles = async (
     body: IChangeRoleGroupRolesBody,
 ) => {
     const roleGroup = await getRoleGroupById(roleGroupId);
-    const isRoleIdsExisted = await checkExistedRoleIds(body.roleIds);
+    const uniqRoleIds = uniq(body.roleIds);
+    const isRoleIdsExisted = await checkExistedRoleIds(uniqRoleIds);
     if (!isRoleIdsExisted)
         throw new ErrorWithCode(HttpStatus.ITEM_NOT_FOUND, 'some role not existed');
-    await roleGroup.setRoles(body.roleIds);
+    await roleGroup.setRoles(uniqRoleIds);
     const updatedRoleGroup = await getRoleGroupById(roleGroupId);
     return updatedRoleGroup;
 };
@@ -95,14 +97,4 @@ export const checkExistedRoleGroupName = async (name: string) => {
     });
     if (roleGroup) return true;
     return false;
-};
-
-export const checkExistedRoleIds = async (roleIds: number[]) => {
-    const uniqRoleIds = uniq(roleIds);
-    const existedRoleList = await Role.findAll({
-        where: {
-            id: uniqRoleIds,
-        },
-    });
-    return existedRoleList.length === uniqRoleIds.length;
 };

@@ -54,23 +54,32 @@ export const initializeModelRelationships = () => {
         foreignKey: 'role_group_id',
         as: 'users',
     });
-    // User Group - User: 1 - n (manager)
-    User.belongsTo(UserGroup, {
+    // User Group - User: n - 1 (manager)
+    UserGroup.belongsTo(User, {
         foreignKey: 'manager_id',
         as: 'manager',
     });
-    UserGroup.hasOne(User);
     // User Group - User n - n
     User.belongsToMany(UserGroup, {
         through: UserGroupUser,
         foreignKey: 'user_id',
         as: 'userGroups',
-    }),
-        UserGroup.belongsToMany(User, {
-            through: UserGroupUser,
-            foreignKey: 'user_group_id',
-            as: 'users',
-        });
+    });
+    UserGroup.belongsToMany(User, {
+        through: UserGroupUser,
+        foreignKey: 'user_group_id',
+        as: 'users',
+    });
 };
 
-export { Permission, RoleGroupRole, RoleGroup, Role, User, UserRole, UserRoleGroup };
+export {
+    Permission,
+    RoleGroupRole,
+    RoleGroup,
+    Role,
+    User,
+    UserRole,
+    UserRoleGroup,
+    UserGroup,
+    UserGroupUser,
+};

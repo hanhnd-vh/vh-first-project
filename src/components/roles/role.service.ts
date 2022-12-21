@@ -1,4 +1,3 @@
-import { RoleGroup } from './../../../database/models/role-group.model';
 import { uniq } from 'lodash';
 import { Permission, Role } from '../../../database/models';
 import { HttpStatus } from '../../common/constants';
@@ -9,6 +8,7 @@ import {
     DEFAULT_PAGE_VALUE,
 } from '../../constants';
 import { ErrorWithCode } from '../../exception/error.exception';
+import { RoleGroup } from './../../../database/models/role-group.model';
 import {
     IChangeRolePermissionsBody,
     ICreateRoleBody,
@@ -68,10 +68,11 @@ export const changeRolePermissions = async (
     body: IChangeRolePermissionsBody,
 ) => {
     const role = await getRoleById(roleId);
-    const isPermissionIdsExisted = await checkExistedPermissionIds(body.permissionIds);
+    const uniPermissionIds = uniq(body.permissionIds);
+    const isPermissionIdsExisted = await checkExistedPermissionIds(uniPermissionIds);
     if (!isPermissionIdsExisted)
         throw new ErrorWithCode(HttpStatus.ITEM_NOT_FOUND, 'some permission not existed');
-    await role.setPermissions(body.permissionIds);
+    await role.setPermissions(uniPermissionIds);
     const updatedRole = await getRoleById(roleId);
     return updatedRole;
 };
@@ -93,13 +94,12 @@ export const checkExistedRoleName = async (name: string) => {
 };
 
 export const checkExistedPermissionIds = async (permissionIds: number[]) => {
-    const uniqPermissionIds = uniq(permissionIds);
     const existedPermissionList = await Permission.findAll({
         where: {
-            id: uniqPermissionIds,
+            id: permissionIds,
         },
     });
-    return existedPermissionList.length === uniqPermissionIds.length;
+    return existedPermissionList.length === permissionIds.length;
 };
 
 export const getRolesByRoleGroupIds = async (roleGroupIds: number[]) => {

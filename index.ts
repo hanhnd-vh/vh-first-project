@@ -5,6 +5,7 @@ import authRouter from './src/components/auth';
 import permissionRouter from './src/components/permissions';
 import roleGroupRouter from './src/components/role-groups';
 import roleRouter from './src/components/roles';
+import userGroupRouter from './src/components/user-groups';
 import userRouter from './src/components/users/';
 import { authenticate } from './src/middlewares/authenticate.middleware';
 
@@ -17,6 +18,7 @@ app.use(`${API_PREFIX}/users`, authenticate, userRouter);
 app.use(`${API_PREFIX}/roles`, authenticate, roleRouter);
 app.use(`${API_PREFIX}/permissions`, authenticate, permissionRouter);
 app.use(`${API_PREFIX}/role-groups`, authenticate, roleGroupRouter);
+app.use(`${API_PREFIX}/user-groups`, authenticate, userGroupRouter);
 
 const PORT = process.env.PORT || 3000;
 
