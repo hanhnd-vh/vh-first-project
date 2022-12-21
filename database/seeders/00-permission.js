@@ -9,6 +9,10 @@ const Permissions = [
     'READ_ROLE',
     'UPDATE_ROLE',
     'DELETE_ROLE',
+    'CREATE_ROLE_GROUP',
+    'READ_ROLE_GROUP',
+    'UPDATE_ROLE_GROUP',
+    'DELETE_ROLE_GROUP',
 ];
 module.exports = {
     up: async (queryInterface) => {
