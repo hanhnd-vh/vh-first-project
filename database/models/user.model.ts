@@ -1,4 +1,3 @@
-import { RoleGroup } from './role-group.model';
 import {
     CreationOptional,
     DataTypes,
@@ -8,7 +7,9 @@ import {
 } from 'sequelize';
 import sequelize from '../sequelize';
 import { TableName } from './constant';
+import { RoleGroup } from './role-group.model';
 import { Role } from './role.model';
+import { UserGroup } from './user-group.model';
 
 export class User extends Model<InferAttributes<User>, InferCreationAttributes<User>> {
     declare id: CreationOptional<number>;
@@ -19,14 +20,17 @@ export class User extends Model<InferAttributes<User>, InferCreationAttributes<U
     declare roles?: Role[];
     declare setRoleGroups: (roleGroupIds: number[]) => Promise<void>;
     declare roleGroups?: RoleGroup[];
+    declare userGroups?: UserGroup[];
+    declare manageGroups?: UserGroup[];
 }
 
 User.init(
     {
         id: {
             type: DataTypes.INTEGER,
-            primaryKey: true,
             autoIncrement: true,
+            primaryKey: true,
+            allowNull: false,
         },
         username: {
             type: DataTypes.STRING,

@@ -7,22 +7,26 @@ module.exports = {
                 'user_role_groups',
                 {
                     user_id: {
-                        allowNull: false,
-                        primaryKey: true,
                         type: DataTypes.INTEGER,
+                        allowNull: false,
                         references: {
                             model: 'users',
                             key: 'id',
                         },
                     },
                     role_group_id: {
-                        allowNull: false,
-                        primaryKey: true,
                         type: DataTypes.INTEGER,
+                        allowNull: false,
                         references: {
                             model: 'role_groups',
                             key: 'id',
                         },
+                    },
+                    id: {
+                        type: DataTypes.INTEGER,
+                        autoIncrement: true,
+                        primaryKey: true,
+                        allowNull: false,
                     },
                     created_at: {
                         type: DataTypes.DATE,

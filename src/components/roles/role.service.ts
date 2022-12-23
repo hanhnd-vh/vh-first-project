@@ -40,6 +40,17 @@ export const getRoleById = async (roleId: number) => {
     return role;
 };
 
+export const getRoleByName = async (name: string) => {
+    const role = await Role.findOne({
+        where: {
+            name,
+        },
+        include: roleIncludes,
+    });
+    if (!role) throw new ErrorWithCode(HttpStatus.ITEM_NOT_FOUND, 'role not found!');
+    return role;
+};
+
 export const getRoleList = async (query: IGetRoleListQuery) => {
     const {
         page = DEFAULT_PAGE_VALUE,
@@ -103,7 +114,7 @@ export const checkExistedPermissionIds = async (permissionIds: number[]) => {
 };
 
 export const getRolesByRoleGroupIds = async (roleGroupIds: number[]) => {
-    const permissions = await Role.findAll({
+    const roles = await Role.findAll({
         include: [
             {
                 model: RoleGroup,
@@ -115,5 +126,5 @@ export const getRolesByRoleGroupIds = async (roleGroupIds: number[]) => {
             },
         ],
     });
-    return permissions;
+    return roles;
 };

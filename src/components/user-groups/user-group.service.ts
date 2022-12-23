@@ -1,4 +1,3 @@
-import { getUserById, userExcludeAttributes } from './../users/user.service';
 import { uniq } from 'lodash';
 import { User, UserGroup } from '../../../database/models';
 import { DEFAULT_PAGE_VALUE } from '../../constants';
@@ -9,6 +8,7 @@ import {
     DEFAULT_ORDER_DIRECTION,
     DEFAULT_PAGE_LIMIT,
 } from './../../constants';
+import { getUserById, userExcludeAttributes } from './../users/user.service';
 import {
     IChangeUserGroupUsersBody,
     ICreateUserGroupBody,

@@ -1,4 +1,5 @@
 const { DataTypes } = require('sequelize');
+const { v4: uuidv4 } = require('uuid');
 
 module.exports = {
     up: async (queryInterface) => {
@@ -7,22 +8,26 @@ module.exports = {
                 'user_group_users',
                 {
                     user_group_id: {
-                        allowNull: false,
-                        primaryKey: true,
                         type: DataTypes.INTEGER,
+                        allowNull: false,
                         references: {
                             model: 'user_groups',
                             key: 'id',
                         },
                     },
                     user_id: {
-                        allowNull: false,
-                        primaryKey: true,
                         type: DataTypes.INTEGER,
+                        allowNull: false,
                         references: {
                             model: 'users',
                             key: 'id',
                         },
+                    },
+                    id: {
+                        type: DataTypes.INTEGER,
+                        autoIncrement: true,
+                        primaryKey: true,
+                        allowNull: false,
                     },
                     created_at: {
                         type: DataTypes.DATE,

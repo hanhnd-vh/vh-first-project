@@ -1,21 +1,11 @@
-const Roles = ['ADMIN', 'USER'];
+const { Roles, seedingRoles } = require('../constants/seeding-constants');
 
 module.exports = {
     up: async (queryInterface) => {
         return await queryInterface.sequelize.transaction(async (transaction) => {
-            return await queryInterface.bulkInsert(
-                'roles',
-                Roles.map((role) => {
-                    return {
-                        name: role,
-                        created_at: new Date(),
-                        updated_at: new Date(),
-                    };
-                }),
-                {
-                    transaction,
-                },
-            );
+            return await queryInterface.bulkInsert('roles', seedingRoles, {
+                transaction,
+            });
         });
     },
 

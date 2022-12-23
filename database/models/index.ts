@@ -59,6 +59,10 @@ export const initializeModelRelationships = () => {
         foreignKey: 'manager_id',
         as: 'manager',
     });
+    User.hasMany(UserGroup, {
+        foreignKey: 'manager_id',
+        as: 'manageGroups',
+    });
     // User Group - User n - n
     User.belongsToMany(UserGroup, {
         through: UserGroupUser,

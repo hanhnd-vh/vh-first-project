@@ -7,8 +7,6 @@ module.exports = {
                 'role_permissions',
                 {
                     role_id: {
-                        allowNull: false,
-                        primaryKey: true,
                         type: DataTypes.INTEGER,
                         references: {
                             model: 'roles',
@@ -16,13 +14,17 @@ module.exports = {
                         },
                     },
                     permission_id: {
-                        allowNull: false,
-                        primaryKey: true,
                         type: DataTypes.INTEGER,
                         references: {
                             model: 'permissions',
                             key: 'id',
                         },
+                    },
+                    id: {
+                        type: DataTypes.INTEGER,
+                        autoIncrement: true,
+                        primaryKey: true,
+                        allowNull: false,
                     },
                     created_at: {
                         type: DataTypes.DATE,

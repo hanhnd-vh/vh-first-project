@@ -1,12 +1,12 @@
-import { TableName } from './constant';
 import {
-    Model,
-    InferAttributes,
-    InferCreationAttributes,
     CreationOptional,
     DataTypes,
+    InferAttributes,
+    InferCreationAttributes,
+    Model,
 } from 'sequelize';
 import sequelize from '../sequelize';
+import { TableName } from './constant';
 export class RoleGroup extends Model<
     InferAttributes<RoleGroup>,
     InferCreationAttributes<RoleGroup>

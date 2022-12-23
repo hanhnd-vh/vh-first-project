@@ -1,20 +1,24 @@
-const { seedingUserRoles } = require('../constants/seeding-constants');
+const { seedingRolePermissions } = require('../constants/seeding-constants');
 
 module.exports = {
     up: async (queryInterface) => {
         return await queryInterface.sequelize.transaction(async (transaction) => {
-            return await queryInterface.bulkInsert('user_roles', seedingUserRoles, {
-                transaction,
-            });
+            return await queryInterface.bulkInsert(
+                'role_permissions',
+                seedingRolePermissions,
+                {
+                    transaction,
+                },
+            );
         });
     },
 
     down: async (queryInterface) => {
         return await queryInterface.sequelize.transaction(async (transaction) => {
             return await queryInterface.bulkDelete(
-                'user_roles',
+                'role_permissions',
                 {
-                    id: seedingUserRoles.map((userRole) => userRole.id),
+                    id: seedingRolePermissions.map((rolePermission) => rolePermission.id),
                 },
                 {
                     transaction,

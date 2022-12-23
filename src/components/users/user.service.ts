@@ -1,4 +1,4 @@
-import { uniq } from 'lodash';
+import { isEmpty, uniq } from 'lodash';
 import { Role, RoleGroup, User } from '../../../database/models';
 import { HttpStatus } from '../../common/constants';
 import { ErrorWithCode } from '../../exception/error.exception';
@@ -35,6 +35,10 @@ export const userIncludes = [
         as: 'userGroups',
         through: { attributes: [] },
     },
+    {
+        model: UserGroup,
+        as: 'manageGroups',
+    },
 ];
 
 export const getUserById = async (userId: number) => {
@@ -69,6 +73,12 @@ export const getUserList = async (query: IGetUserListQuery) => {
     } = query;
     const offset = (+page - 1) * +limit;
 
+    const whereConditions = {
+        ...(roleIds && {
+            id: roleIds,
+        }),
+    };
+
     const { rows, count } = await User.findAndCountAll({
         offset,
         limit: +limit,
@@ -80,9 +90,7 @@ export const getUserList = async (query: IGetUserListQuery) => {
             model: Role,
             as: 'roles',
             attributes: ['id', 'name'],
-            where: {
-                id: roleIds,
-            },
+            ...(!isEmpty(whereConditions) && { where: whereConditions }),
             through: {
                 attributes: [],
             },
@@ -145,4 +153,41 @@ export const checkExistedRoleIds = async (roleIds: number[]) => {
         },
     });
     return existedRoleList.length === roleIds.length;
+};
+
+export const getUserMentees = async (userId: number) => {
+    const user = await getUserById(userId);
+    if (!user.manageGroups || !user.manageGroups.length)
+        return {
+            items: [],
+            totalItems: 0,
+        };
+
+    const manageGroupsIds = user.manageGroups.map((group) => group.id);
+    const mentees = await getUsersByUserGroupIds(manageGroupsIds);
+    return mentees;
+};
+
+export const getUsersByUserGroupIds = async (userGroupIds: number[]) => {
+    const { rows, count } = await User.findAndCountAll({
+        include: {
+            model: UserGroup,
+            attributes: [],
+            as: 'userGroups',
+            where: {
+                id: userGroupIds,
+            },
+            through: {
+                attributes: [],
+            },
+        },
+        attributes: {
+            exclude: userExcludeAttributes,
+        },
+        distinct: true,
+    });
+    return {
+        items: rows,
+        totalItems: count,
+    };
 };

@@ -1,4 +1,10 @@
-import { DataTypes, InferAttributes, InferCreationAttributes, Model } from 'sequelize';
+import {
+    CreationOptional,
+    DataTypes,
+    InferAttributes,
+    InferCreationAttributes,
+    Model,
+} from 'sequelize';
 import sequelize from '../sequelize';
 import { TableName } from './constant';
 import { Role } from './role.model';
@@ -7,6 +13,7 @@ export class UserRole extends Model<
     InferAttributes<UserRole>,
     InferCreationAttributes<UserRole>
 > {
+    declare id: CreationOptional<number>;
     declare userId: number;
     declare roleId: number;
 }
@@ -15,6 +22,7 @@ UserRole.init(
     {
         userId: {
             type: DataTypes.INTEGER,
+            primaryKey: true,
             field: 'user_id',
             references: {
                 model: User,
@@ -23,11 +31,18 @@ UserRole.init(
         },
         roleId: {
             type: DataTypes.INTEGER,
+            primaryKey: true,
             field: 'role_id',
             references: {
                 model: Role,
                 key: 'id',
             },
+        },
+        id: {
+            type: DataTypes.INTEGER,
+            autoIncrement: true,
+            primaryKey: true,
+            allowNull: false,
         },
     },
     {

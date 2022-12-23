@@ -6,6 +6,7 @@ import {
     deleteUserController,
     getUserDetailController,
     getUserListController,
+    getUserMenteesController,
     getUserSelfProfileController,
     updateUserPasswordController,
     updateUserProfileController,
@@ -42,6 +43,11 @@ userRouter.patch(
     updateUserPasswordController,
 );
 userRouter.get('/:id', permissions([Permissions.READ_USER]), getUserDetailController);
+userRouter.get(
+    '/:id/mentees',
+    permissions([Permissions.READ_USER]),
+    getUserMenteesController,
+);
 userRouter.patch(
     '/:id/change-roles',
     validateBody(updateUserRolesSchema),

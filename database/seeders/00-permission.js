@@ -1,35 +1,11 @@
-const Permissions = [
-    'CREATE_USER',
-    'READ_USER',
-    'UPDATE_USER_PROFILE',
-    'CHANGE_PASSWORD',
-    'CHANGE_USER_ROLES',
-    'DELETE_USER',
-    'CREATE_ROLE',
-    'READ_ROLE',
-    'UPDATE_ROLE',
-    'DELETE_ROLE',
-    'CREATE_ROLE_GROUP',
-    'READ_ROLE_GROUP',
-    'UPDATE_ROLE_GROUP',
-    'DELETE_ROLE_GROUP',
-];
+const { Permissions, seedingPermissions } = require('../constants/seeding-constants');
+
 module.exports = {
     up: async (queryInterface) => {
         return await queryInterface.sequelize.transaction(async (transaction) => {
-            return await queryInterface.bulkInsert(
-                'permissions',
-                Permissions.map((permission) => {
-                    return {
-                        name: permission,
-                        created_at: new Date(),
-                        updated_at: new Date(),
-                    };
-                }),
-                {
-                    transaction,
-                },
-            );
+            return await queryInterface.bulkInsert('permissions', seedingPermissions, {
+                transaction,
+            });
         });
     },
 

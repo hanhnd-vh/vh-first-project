@@ -1,11 +1,13 @@
-import { uniq, uniqBy } from 'lodash';
-import { Role, User } from '../../../database/models';
+import { uniqBy } from 'lodash';
+import { User } from '../../../database/models';
 import { HttpStatus } from '../../common/constants';
+import { Roles } from '../../constants';
 import { ErrorWithCode } from '../../exception/error.exception';
 import { compare, hash } from '../../plugins/bcrypt';
 import { signToken } from '../../plugins/jwt';
 import { getRolesByRoleGroupIds } from '../roles/role.service';
 import { getPermissionsByRoleIds } from './../permissions/permission.service';
+import { getRoleByName } from './../roles/role.service';
 import { getUserById, userIncludes } from './../users/user.service';
 import { ILoginBody, IRegisterBody } from './auth.interface';
 
@@ -34,7 +36,8 @@ export const register = async (body: IRegisterBody) => {
     });
 
     // Set role is user by default
-    await createdUser.setRoles([2]);
+    const roleUser = await getRoleByName(Roles.USER);
+    await createdUser.setRoles([roleUser.id]);
     const user = await getUserById(createdUser.id);
     if (!user)
         throw new ErrorWithCode(HttpStatus.INTERNAL_SERVER_ERROR, 'an error occurred!');

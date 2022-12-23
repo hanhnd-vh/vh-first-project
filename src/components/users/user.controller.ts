@@ -14,6 +14,7 @@ import {
     deleteUser,
     getUserById,
     getUserList,
+    getUserMentees,
     updateUserPassword,
     updateUserProfile,
     updateUserRoleGroups,
@@ -185,6 +186,27 @@ export const deleteUserController = async (
     try {
         const result = await deleteUser(id);
         return response.status(HttpStatus.OK).send(new SuccessResponse(result));
+    } catch (error) {
+        const errorWithCode = error as ErrorWithCode;
+        return response
+            .status(errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR)
+            .send(
+                new ErrorResponse(
+                    errorWithCode.code || HttpStatus.INTERNAL_SERVER_ERROR,
+                    errorWithCode.message,
+                ),
+            );
+    }
+};
+
+export const getUserMenteesController = async (
+    request: IRequestWithUser<{ id: number }, {}, {}, {}>,
+    response: Response,
+) => {
+    const { id } = request.params;
+    try {
+        const mentees = await getUserMentees(id);
+        return response.status(HttpStatus.OK).send(new SuccessResponse(mentees));
     } catch (error) {
         const errorWithCode = error as ErrorWithCode;
         return response

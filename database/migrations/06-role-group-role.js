@@ -8,7 +8,6 @@ module.exports = {
                 {
                     role_group_id: {
                         allowNull: false,
-                        primaryKey: true,
                         type: DataTypes.INTEGER,
                         references: {
                             model: 'role_groups',
@@ -17,12 +16,17 @@ module.exports = {
                     },
                     role_id: {
                         allowNull: false,
-                        primaryKey: true,
                         type: DataTypes.INTEGER,
                         references: {
                             model: 'roles',
                             key: 'id',
                         },
+                    },
+                    id: {
+                        type: DataTypes.INTEGER,
+                        autoIncrement: true,
+                        primaryKey: true,
+                        allowNull: false,
                     },
                     created_at: {
                         type: DataTypes.DATE,
