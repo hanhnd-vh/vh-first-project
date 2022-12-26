@@ -1,5 +1,7 @@
-import { isEmpty, uniq } from 'lodash';
+import { UserRole } from './../../../database/models/user-roles.model';
+import { difference, isEmpty, uniq } from 'lodash';
 import { Role, RoleGroup, User } from '../../../database/models';
+import sequelize from '../../../database/sequelize';
 import { HttpStatus } from '../../common/constants';
 import { ErrorWithCode } from '../../exception/error.exception';
 import { hash } from '../../plugins/bcrypt';
@@ -119,13 +121,14 @@ export const updateUserPassword = async (
 };
 
 export const updateUserRoles = async (userId: number, body: IChangeUserRolesBody) => {
-    const user = await getUserById(userId);
+    const user = await getUserById(userId); // 1 select query
     const uniqRoleIds = uniq(body.roleIds);
     const isRoleExisted = await checkExistedRoleIds(uniqRoleIds);
     if (!isRoleExisted) {
         throw new ErrorWithCode(HttpStatus.ITEM_NOT_FOUND, 'some roles not existed');
     }
-    await user.setRoles(uniqRoleIds);
+    // await user.setRoles(uniqRoleIds);
+    await setUserRoles(user.id, uniqRoleIds);
     const updatedUser = await getUserById(userId);
     return updatedUser;
 };
@@ -190,4 +193,38 @@ export const getUsersByUserGroupIds = async (userGroupIds: number[]) => {
         items: rows,
         totalItems: count,
     };
+};
+
+export const setUserRoles = async (userId: number, roleIds: number[]) => {
+    await sequelize.transaction(async (transaction) => {
+        const userRoleIds = (
+            await UserRole.findAll({
+                where: {
+                    userId,
+                },
+                transaction,
+            })
+        ).map((userRole) => userRole.roleId);
+
+        const toDeleteRoleIds = difference(userRoleIds, roleIds);
+        const toInsertRoleIds = difference(roleIds, userRoleIds);
+
+        await UserRole.destroy({
+            where: {
+                userId,
+                roleId: toDeleteRoleIds,
+            },
+            transaction,
+        });
+
+        await UserRole.bulkCreate(
+            toInsertRoleIds.map((roleId) => {
+                return {
+                    userId,
+                    roleId,
+                };
+            }),
+            { transaction },
+        );
+    });
 };
